@@ -12,30 +12,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5385a3000d5294e81f7b41514f3bcd, type: 3}
   m_Name: PlayerMovementAttributes
   m_EditorClassIdentifier: 
-  movementSpeed: 30
-  jumpForce:
+  movementSpeed: 40
+  maxSpeed: 8
+  jumpForce: 20
+  maxJumpHoldTime: 0.12
+  jumpBufferTime: 0.2
+  coyoteTime: 0.25
+  holdJumpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.00010681152
-      value: 6.3092146
-      inSlope: 60.92188
-      outSlope: 60.92188
+      time: 0
+      value: 0.5
+      inSlope: 1.5392972
+      outSlope: 1.5392972
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.057029907
+      outWeight: 0.17323944
     - serializedVersion: 3
       time: 0.1
-      value: 15.5
-      inSlope: 16.839174
-      outSlope: 16.839174
+      value: 1.15
+      inSlope: 13.375459
+      outSlope: 13.375459
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.051451102
+      inWeight: 0.022535175
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  movementApexJumpModifier:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -15
+      value: 0.5
+      inSlope: 0.043333333
+      outSlope: 0.043333333
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0
+      value: 1.15
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 15
+      value: 0.5
+      inSlope: -0.043333333
+      outSlope: -0.043333333
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpeed: 8
-  onAirMovementMultiplier: 0.35
