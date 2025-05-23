@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,7 +18,7 @@ namespace ZumoHead.Platforming
     /// This class is designed to be attached as a component to the player character GameObject in Unity.
     /// All functionalities related to player movement should be handled within this component.
     /// </example>
-    public sealed class PlayerMovementController : MonoBehaviour
+    public sealed class PlayerMovementController : MonoBehaviour, IRespawnable
     {
         /// <summary>
         /// A reference to the SpriteRenderer component used to handle the visual appearance and transformations
@@ -162,6 +163,8 @@ namespace ZumoHead.Platforming
         /// it back to its original state after such effects have been completed.
         /// </remarks>
         private Vector3 _visualsOriginaScale;
+
+        private Vector2 _lastGroundedPosition;
 
         /// <summary>
         /// Initializes necessary components and sets up default values
@@ -328,6 +331,8 @@ namespace ZumoHead.Platforming
             if (_isGrounded)
             {
                 _coyoteTimeCounter = movementConfig.coyoteTime;
+                _lastGroundedPosition = transform.position;
+                _lastGroundedPosition.x -= rigidbody2D.linearVelocity.x / 2;
             }
             else if (_isJumpCharging)
             {
@@ -405,6 +410,23 @@ namespace ZumoHead.Platforming
         private void OnDestroy()
         {
             _inputSystemActions.Disable();
+        }
+
+        public async UniTask Despawn()
+        {
+            _inputSystemActions.Disable();
+            spriteRenderer.enabled = false;
+            rigidbody2D.bodyType = RigidbodyType2D.Static;
+            await UniTask.Delay(1500);
+        }
+
+        public async UniTask Respawn()
+        {
+            _inputSystemActions.Enable();
+            spriteRenderer.enabled = true;
+            rigidbody2D.linearVelocity = Vector2.zero;
+            transform.position = _lastGroundedPosition;
+            rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
         }
     }
 }
