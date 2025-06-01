@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
@@ -14,11 +16,11 @@ namespace Payosky.Platformer
         public PlatformerInputActions PlatformerInputActions { private set; get; }
         [field: SerializeField] public SpriteRenderer SpriteRenderer { private set; get; }
 
-        public Action<IPlayerController> OnSpawn;
-
         public Action<IRespawnable> OnRespawn;
 
         public Action<IRespawnable> OnDespawn;
+
+        private List<IPlayerControllerComponent> _components = new();
 
         private void Awake()
         {
@@ -28,30 +30,44 @@ namespace Payosky.Platformer
         private void OnEnable()
         {
             PlatformerInputActions.Enable();
+            InitComponents();
         }
 
         private void OnDisable()
         {
             PlatformerInputActions.Disable();
+            DisposeComponents();
         }
 
-        private void Start()
-        {
-            OnSpawn?.Invoke(this);
-        }
-
-        public async UniTask Despawn()
+        async UniTask IRespawnable.Despawn()
         {
             PlatformerInputActions.Disable();
             OnDespawn?.Invoke(this);
             await UniTask.Delay(1500);
         }
 
-        public UniTask Respawn()
+        UniTask IRespawnable.Respawn()
         {
             PlatformerInputActions.Enable();
             OnRespawn?.Invoke(this);
             return UniTask.CompletedTask;
+        }
+
+        public void InitComponents(bool includeInactive = false)
+        {
+            foreach (var component in GetComponentsInChildren<IPlayerControllerComponent>(includeInactive))
+            {
+                if (_components.Contains(component)) continue;
+                component.Init(this);
+                _components.Add(component);
+            }
+        }
+
+        public void DisposeComponents()
+        {
+            foreach (var component in _components.ToList()) component.Dispose();
+
+            _components.Clear();
         }
     }
 }

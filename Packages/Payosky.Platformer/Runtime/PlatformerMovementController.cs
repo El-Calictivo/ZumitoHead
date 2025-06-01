@@ -1,5 +1,4 @@
 using System;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
@@ -12,7 +11,7 @@ namespace Payosky.Platformer
     [RequireComponent(typeof(PlatformerPlayerController))]
     public sealed class PlatformerMovementController : MonoBehaviour, IPlayerMovementController
     {
-        [field: SerializeField] private PlatformerPlayerController playerController;
+        private PlatformerPlayerController _controller;
 
         [field: Space(5)]
         [field: SerializeField] public PlatformerAttributes PlatformerAttributes { private set; get; }
@@ -50,31 +49,7 @@ namespace Payosky.Platformer
 
         private float _jumpHoldCounter;
 
-        private Vector3 _visualsOriginaScale;
-
         private Vector2 _lastGroundedPosition;
-
-        private void OnValidate()
-        {
-            if (!playerController) TryGetComponent(out playerController);
-        }
-
-        private void Start()
-        {
-            playerController.OnRespawn += OnPlayerRespawned;
-            playerController.OnDespawn += OnPlayerDespawned;
-            playerController.PlatformerInputActions.Player.Jump.performed += HandleJump;
-            playerController.PlatformerInputActions.Player.Jump.canceled += HandleJump;
-            _visualsOriginaScale = playerController.SpriteRenderer.transform.localScale;
-        }
-
-        private void OnDestroy()
-        {
-            playerController.OnRespawn -= OnPlayerRespawned;
-            playerController.OnDespawn -= OnPlayerDespawned;
-            playerController.PlatformerInputActions.Player.Jump.performed -= HandleJump;
-            playerController.PlatformerInputActions.Player.Jump.canceled -= HandleJump;
-        }
 
         private void Update()
         {
@@ -85,13 +60,6 @@ namespace Payosky.Platformer
         {
             GroundCheck();
             HandleMovement();
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            playerController.SpriteRenderer.transform.DOShakeScale(0.1f, other.relativeVelocity * 0.1f, 24).SetRelative()
-                .SetEase(Ease.InOutBounce)
-                .OnComplete(() => playerController.SpriteRenderer.transform.localScale = _visualsOriginaScale);
         }
 
         private void OnDrawGizmosSelected()
@@ -123,9 +91,9 @@ namespace Payosky.Platformer
                 if (_jumpBufferCounter > 0)
                 {
                     var jumpForce = PlatformerAttributes.jumpForce * (_doHoldJump ? PlatformerAttributes.holdJumpCurve.Evaluate(_jumpHoldCounter) : 1);
-                    jumpForce -= playerController.Rigidbody2D.linearVelocityY;
+                    jumpForce -= _controller.Rigidbody2D.linearVelocityY;
 
-                    playerController.Rigidbody2D.AddForceY(jumpForce, ForceMode2D.Impulse);
+                    _controller.Rigidbody2D.AddForceY(jumpForce, ForceMode2D.Impulse);
                     _doHoldJump = false;
                     _coyoteTimeCounter = 0;
                     _jumpBufferCounter = 0;
@@ -146,14 +114,14 @@ namespace Payosky.Platformer
             var groundCheck = Physics2D.OverlapCircle(transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
             var roofCheck = Physics2D.OverlapCircle(transform.position + roofCheckOffset, roofCheckRadius, groundLayer);
 
-            _isGrounded = groundCheck && groundCheck != roofCheck && playerController.Rigidbody2D.linearVelocityY <= 0;
+            _isGrounded = groundCheck && groundCheck != roofCheck && _controller.Rigidbody2D.linearVelocityY <= 0;
 
             if (_isGrounded)
             {
                 _coyoteTimeCounter = PlatformerAttributes.coyoteTime;
 
                 _lastGroundedPosition = transform.position;
-                switch (playerController.Rigidbody2D.linearVelocity.x)
+                switch (_controller.Rigidbody2D.linearVelocity.x)
                 {
                     case < 0:
                         _lastGroundedPosition.x += horizontalRespawnMargin;
@@ -174,18 +142,11 @@ namespace Payosky.Platformer
 
         private void HandleMovement()
         {
-            var movementAxis = playerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
+            var movementAxis = _controller.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
 
-            playerController.SpriteRenderer.flipX = movementAxis.x switch
+            if (Mathf.Abs(_controller.Rigidbody2D.linearVelocityX) < PlatformerAttributes.maxSpeed * (_isGrounded ? 1 : PlatformerAttributes.movementApexJumpModifier.Evaluate(_controller.Rigidbody2D.linearVelocityY)))
             {
-                < 0 => true,
-                > 0 => false,
-                _ => playerController.SpriteRenderer.flipX
-            };
-
-            if (Mathf.Abs(playerController.Rigidbody2D.linearVelocityX) < PlatformerAttributes.maxSpeed * (_isGrounded ? 1 : PlatformerAttributes.movementApexJumpModifier.Evaluate(playerController.Rigidbody2D.linearVelocityY)))
-            {
-                playerController.Rigidbody2D.AddForceX(movementAxis.x * PlatformerAttributes.movementSpeed);
+                _controller.Rigidbody2D.AddForceX(movementAxis.x * PlatformerAttributes.movementSpeed);
             }
         }
 
@@ -211,18 +172,40 @@ namespace Payosky.Platformer
             }
         }
 
-        public void OnPlayerDespawned(IRespawnable player)
+        public void Init(IPlayerController controller)
         {
-            playerController.SpriteRenderer.enabled = false;
-            playerController.Rigidbody2D.bodyType = RigidbodyType2D.Static;
+            _controller = (PlatformerPlayerController)controller;
+
+            _controller.OnRespawn += OnRespawn;
+            _controller.OnDespawn += OnDespawn;
+
+            _controller.PlatformerInputActions.Player.Jump.performed += HandleJump;
+            _controller.PlatformerInputActions.Player.Jump.canceled += HandleJump;
         }
 
-        public void OnPlayerRespawned(IRespawnable respawned)
+        public void Dispose()
         {
-            playerController.SpriteRenderer.enabled = true;
+            _controller.OnRespawn -= OnRespawn;
+            _controller.OnDespawn -= OnDespawn;
+
+            _controller.PlatformerInputActions.Player.Jump.performed -= HandleJump;
+            _controller.PlatformerInputActions.Player.Jump.canceled -= HandleJump;
+        }
+
+        public void OnSpawn(IRespawnable respawnable)
+        {
+        }
+
+        public void OnRespawn(IRespawnable respawnable)
+        {
             transform.position = _lastGroundedPosition;
-            playerController.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-            playerController.Rigidbody2D.linearVelocity = Vector2.zero;
+            _controller.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+            _controller.Rigidbody2D.linearVelocity = Vector2.zero;
+        }
+
+        public void OnDespawn(IRespawnable respawnable)
+        {
+            _controller.Rigidbody2D.bodyType = RigidbodyType2D.Static;
         }
     }
 }
