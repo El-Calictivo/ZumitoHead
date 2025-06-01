@@ -59,20 +59,16 @@ namespace Payosky.Platformer
             if (!playerController) TryGetComponent(out playerController);
         }
 
-        private void Awake()
-        {
-            _visualsOriginaScale = playerController.SpriteRenderer.transform.localScale;
-        }
-
-        private void OnEnable()
+        private void Start()
         {
             playerController.OnRespawn += OnPlayerRespawned;
             playerController.OnDespawn += OnPlayerDespawned;
             playerController.PlatformerInputActions.Player.Jump.performed += HandleJump;
             playerController.PlatformerInputActions.Player.Jump.canceled += HandleJump;
+            _visualsOriginaScale = playerController.SpriteRenderer.transform.localScale;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             playerController.OnRespawn -= OnPlayerRespawned;
             playerController.OnDespawn -= OnPlayerDespawned;
