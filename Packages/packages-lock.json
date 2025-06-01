@@ -316,6 +316,24 @@
       },
       "url": "https://packages.unity.com"
     },
+    "payosky.coremechanics": {
+      "version": "file:Payosky.CoreMechanics",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "payosky.payosky_playercontroller": {
+      "version": "file:Payosky.PlayerController",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "payosky.platformer": {
+      "version": "file:Payosky.Platformer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
