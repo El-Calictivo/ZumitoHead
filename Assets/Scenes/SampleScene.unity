@@ -1339,6 +1339,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 871750316}
   movementConfig: {fileID: 11400000, guid: 14aab4bc6b31d4647b7b32593eb790f0, type: 2}
   rigidbody2D: {fileID: 972489322}
+  _horizontalRespawnMargin: 1.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8

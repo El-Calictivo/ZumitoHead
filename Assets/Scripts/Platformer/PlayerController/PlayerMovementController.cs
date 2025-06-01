@@ -41,6 +41,8 @@ namespace ZumoHead.Platforming
         /// </summary>
         [SerializeField] private new Rigidbody2D rigidbody2D;
 
+        [SerializeField] private float _horizontalRespawnMargin = 1.5f;
+
         /// <summary>
         /// The layer mask used to define which layers are considered as "ground" in ground checks.
         /// </summary>
@@ -331,8 +333,17 @@ namespace ZumoHead.Platforming
             if (_isGrounded)
             {
                 _coyoteTimeCounter = movementConfig.coyoteTime;
+
                 _lastGroundedPosition = transform.position;
-                _lastGroundedPosition.x -= rigidbody2D.linearVelocity.x / 2;
+                switch (rigidbody2D.linearVelocity.x)
+                {
+                    case < 0:
+                        _lastGroundedPosition.x += _horizontalRespawnMargin;
+                        break;
+                    case > 0:
+                        _lastGroundedPosition.x -= _horizontalRespawnMargin;
+                        break;
+                }
             }
             else if (_isJumpCharging)
             {
