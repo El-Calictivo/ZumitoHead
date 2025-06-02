@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7166236263522030466, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -298,7 +298,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f34a249d3dcca45b421cabe00cf4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 5330680586334706353}
   <PlatformerAttributes>k__BackingField: {fileID: 11400000, guid: 14aab4bc6b31d4647b7b32593eb790f0, type: 2}
   groundLayer:
     serializedVersion: 2
