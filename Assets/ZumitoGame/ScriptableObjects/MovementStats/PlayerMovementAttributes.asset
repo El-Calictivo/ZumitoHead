@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5385a3000d5294e81f7b41514f3bcd, type: 3}
   m_Name: PlayerMovementAttributes
   m_EditorClassIdentifier: 
-  movementSpeed: 40
+  movementSpeed: 64
   maxSpeed: 8
   jumpForce: 20
   maxJumpHoldTime: 0.12

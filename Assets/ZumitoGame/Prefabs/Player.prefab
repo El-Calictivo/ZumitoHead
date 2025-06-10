@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 3733290925511859003}
   - component: {fileID: 5330680586334706353}
   - component: {fileID: 5659212504425172512}
+  - component: {fileID: 4694612495924117420}
   - component: {fileID: 6942444886950892287}
   m_Layer: 0
   m_Name: Player
@@ -285,6 +286,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Rigidbody2D>k__BackingField: {fileID: 6942444886950892287}
+  <MovementController>k__BackingField: {fileID: 5659212504425172512}
+  <RendererController>k__BackingField: {fileID: 4694612495924117420}
   <SpriteRenderer>k__BackingField: {fileID: 5196077493109247442}
 --- !u!114 &5659212504425172512
 MonoBehaviour:
@@ -299,14 +302,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <PlatformerAttributes>k__BackingField: {fileID: 11400000, guid: 14aab4bc6b31d4647b7b32593eb790f0, type: 2}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  groundCheckOffset: {x: 0, y: -0.33, z: 0}
-  groundCheckRadius: 0.12
-  horizontalRespawnMargin: 1.5
-  roofCheckOffset: {x: 0, y: 0.32, z: 0}
-  roofCheckRadius: 0.4
+  <MovementSubsystem>k__BackingField:
+    rid: 5328453479807058191
+  <JumpSubsystem>k__BackingField:
+    rid: 5328453479807058190
+  <GroundCheckSubsystem>k__BackingField:
+    rid: 5328453479807058192
+  coyoteTimeCounter: 0
+  doHoldJump: 0
+  isGrounded: 0
+  isJumpCharging: 0
+  jumpBufferCounter: 0
+  jumpHoldCounter: 0
+  lastGroundedPosition: {x: 0, y: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5328453479807058190
+      type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+      data: 
+    - rid: 5328453479807058191
+      type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+      data: 
+    - rid: 5328453479807058192
+      type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+      data:
+        groundLayer:
+          serializedVersion: 2
+          m_Bits: 8
+        groundCheckOffset: {x: 0, y: -0.33, z: 0}
+        groundCheckRadius: 0.12
+        horizontalRespawnMargin: 1.5
+        roofCheckOffset: {x: 0, y: 0.32, z: 0}
+        roofCheckRadius: 0.4
+--- !u!114 &4694612495924117420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2857988392130802581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9fd9c96a54923b4d17272781bc560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!50 &6942444886950892287
 Rigidbody2D:
   serializedVersion: 5

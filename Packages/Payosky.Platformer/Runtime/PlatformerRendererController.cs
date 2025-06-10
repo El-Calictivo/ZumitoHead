@@ -1,10 +1,7 @@
-using System;
 using DG.Tweening;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 namespace Payosky.Platformer
 {
@@ -14,16 +11,6 @@ namespace Payosky.Platformer
         private PlatformerPlayerController _controller;
 
         private Vector3 _visualsOriginalScale;
-
-        public void Init(IPlayerController controller)
-        {
-            _controller = (PlatformerPlayerController)controller;
-
-            _controller.OnRespawn += OnRespawn;
-            _controller.OnDespawn += OnDespawn;
-
-            _visualsOriginalScale = _controller.SpriteRenderer.transform.localScale;
-        }
 
         private void Update()
         {
@@ -42,6 +29,16 @@ namespace Payosky.Platformer
             _controller.SpriteRenderer.transform.DOShakeScale(0.1f, other.relativeVelocity * 0.1f, 24).SetRelative()
                 .SetEase(Ease.InOutBounce)
                 .OnComplete(() => _controller.SpriteRenderer.transform.localScale = _visualsOriginalScale);
+        }
+
+        public void Init(IPlayerController controller)
+        {
+            _controller = (PlatformerPlayerController)controller;
+
+            _controller.OnRespawn += OnRespawn;
+            _controller.OnDespawn += OnDespawn;
+
+            _visualsOriginalScale = _controller.SpriteRenderer.transform.localScale;
         }
 
         public void Dispose()

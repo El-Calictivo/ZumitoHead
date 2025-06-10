@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
@@ -13,14 +11,15 @@ namespace Payosky.Platformer
         [Header("Components")]
         [field: SerializeField] public Rigidbody2D Rigidbody2D { private set; get; }
 
-        public PlatformerInputActions PlatformerInputActions { private set; get; }
+        [field: SerializeField] public PlatformerMovementController MovementController { private set; get; }
+        [field: SerializeField] public PlatformerRendererController RendererController { private set; get; }
         [field: SerializeField] public SpriteRenderer SpriteRenderer { private set; get; }
-
-        public Action<IRespawnable> OnRespawn;
 
         public Action<IRespawnable> OnDespawn;
 
-        private List<IPlayerControllerComponent> _components = new();
+        public Action<IRespawnable> OnRespawn;
+
+        public PlatformerInputActions PlatformerInputActions { private set; get; }
 
         private void Awake()
         {
@@ -55,19 +54,14 @@ namespace Payosky.Platformer
 
         public void InitComponents(bool includeInactive = false)
         {
-            foreach (var component in GetComponentsInChildren<IPlayerControllerComponent>(includeInactive))
-            {
-                if (_components.Contains(component)) continue;
-                component.Init(this);
-                _components.Add(component);
-            }
+            MovementController?.Init(this);
+            RendererController?.Init(this);
         }
 
         public void DisposeComponents()
         {
-            foreach (var component in _components.ToList()) component.Dispose();
-
-            _components.Clear();
+            MovementController?.Dispose();
+            RendererController?.Dispose();
         }
     }
 }
