@@ -10,15 +10,16 @@ namespace Payosky.Platformer
     {
         [Header("Components")]
         [field: SerializeField] public Rigidbody2D Rigidbody2D { private set; get; }
-
-        public PlatformerInputActions PlatformerInputActions { private set; get; }
+        [field: SerializeField] public Animator Animator { private set; get; }
+        [field: SerializeField] public PlatformerMovementController MovementController { private set; get; }
+        [field: SerializeField] public PlatformerRendererController RendererController { private set; get; }
         [field: SerializeField] public SpriteRenderer SpriteRenderer { private set; get; }
 
-        public Action<IPlayerController> OnSpawn;
+        public Action<IRespawnable> OnDespawn;
 
         public Action<IRespawnable> OnRespawn;
 
-        public Action<IRespawnable> OnDespawn;
+        public PlatformerInputActions PlatformerInputActions { private set; get; }
 
         private void Awake()
         {
@@ -28,30 +29,39 @@ namespace Payosky.Platformer
         private void OnEnable()
         {
             PlatformerInputActions.Enable();
+            InitComponents();
         }
 
         private void OnDisable()
         {
             PlatformerInputActions.Disable();
+            DisposeComponents();
         }
 
-        private void Start()
-        {
-            OnSpawn?.Invoke(this);
-        }
-
-        public async UniTask Despawn()
+        async UniTask IRespawnable.Despawn()
         {
             PlatformerInputActions.Disable();
             OnDespawn?.Invoke(this);
             await UniTask.Delay(1500);
         }
 
-        public UniTask Respawn()
+        UniTask IRespawnable.Respawn()
         {
             PlatformerInputActions.Enable();
             OnRespawn?.Invoke(this);
             return UniTask.CompletedTask;
+        }
+
+        public void InitComponents(bool includeInactive = false)
+        {
+            MovementController?.Init(this);
+            RendererController?.Init(this);
+        }
+
+        public void DisposeComponents()
+        {
+            MovementController?.Dispose();
+            RendererController?.Dispose();
         }
     }
 }

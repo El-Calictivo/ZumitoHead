@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "f213ff497e4ff462a77319cf677cf20cc0860ca9"
     },
+    "com.mackysoft.serializereference-extensions": {
+      "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f938fc5d9a9ef46a1669289450d38e17cb39567c"
+    },
     "com.unity.2d.animation": {
       "version": "10.2.0",
       "depth": 0,
@@ -21,11 +28,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.aseprite": {
-      "version": "1.2.4",
+      "version": "1.2.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.2d.common": "6.0.6",
+        "com.unity.2d.common": "10.0.0",
         "com.unity.2d.sprite": "1.0.0",
         "com.unity.2d.tilemap": "1.0.0",
         "com.unity.mathematics": "1.2.6",
@@ -34,7 +41,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.2d.common": {
-      "version": "9.1.0",
+      "version": "10.0.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -255,7 +262,7 @@
       }
     },
     "com.unity.splines": {
-      "version": "2.8.0",
+      "version": "2.8.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -307,7 +314,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.6",
+      "version": "1.9.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
