@@ -22,19 +22,19 @@ namespace Payosky.Platformer
         public GroundCheckSubsystem GroundCheckSubsystem { private set; get; }
 
         [Header("Movement State Information")]
-        [HideInInspector] public float coyoteTimeCounter;
+        public float coyoteTimeCounter;
 
-        [HideInInspector] public bool doHoldJump;
+        public bool isGrounded;
 
-        [HideInInspector] public bool isGrounded;
+        public bool isJumpCharging;
 
-        [HideInInspector] public bool isJumpCharging;
+        public bool justLanded;
 
-        [HideInInspector] public float jumpBufferCounter;
+        public float jumpBufferCounter;
 
-        [HideInInspector] public float jumpHoldCounter;
+        public float jumpHoldCounter;
 
-        [HideInInspector] public Vector2 lastGroundedPosition;
+        public Vector2 lastGroundedPosition;
 
         private PlatformerPlayerController _controller;
 

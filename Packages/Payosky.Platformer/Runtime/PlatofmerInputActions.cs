@@ -98,7 +98,7 @@ namespace Payosky.Platformer
                     ""type"": ""Value"",
                     ""id"": ""351f2ccd-1f9f-44bf-9bec-d62ac5c5f408"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.8)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -176,6 +176,17 @@ namespace Payosky.Platformer
                 }
             ],
             ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""9b7cc8e7-850e-4898-ad7c-bc64f4c66cd0"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
                 {
                     ""name"": """",
                     ""id"": ""978bfe49-cc26-4a3d-ab7b-7d7a29327403"",

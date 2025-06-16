@@ -22,20 +22,17 @@ namespace Payosky.Platformer
         {
             if (context.performed)
             {
-                if (MovementController.isGrounded)
-                {
-                    MovementController.isJumpCharging = true;
-                }
-                else
+                MovementController.isJumpCharging = true;
+
+                if (!MovementController.isGrounded)
                 {
                     MovementController.jumpBufferCounter = PlatformerAttributes.jumpBufferTime;
                 }
             }
             else if (context.canceled)
             {
-                if (!MovementController.isGrounded || !MovementController.isJumpCharging || !(MovementController.jumpHoldCounter < PlatformerAttributes.maxJumpHoldTime)) return;
+                if (!MovementController.isJumpCharging || !(MovementController.jumpHoldCounter < PlatformerAttributes.maxJumpHoldTime)) return;
                 MovementController.jumpBufferCounter = PlatformerAttributes.jumpBufferTime;
-                MovementController.doHoldJump = true;
                 MovementController.isJumpCharging = false;
             }
         }
@@ -51,7 +48,13 @@ namespace Payosky.Platformer
             MovementController.jumpBufferCounter = Mathf.Clamp(MovementController.jumpBufferCounter - Time.deltaTime, 0, PlatformerAttributes.jumpBufferTime);
             MovementController.coyoteTimeCounter = Mathf.Clamp(MovementController.coyoteTimeCounter - Time.deltaTime, 0, PlatformerAttributes.coyoteTime);
 
-            if (MovementController.isGrounded && MovementController.isJumpCharging)
+            if (!MovementController.isGrounded && Mathf.Approximately(MovementController.jumpHoldCounter, PlatformerAttributes.maxJumpHoldTime))
+            {
+                MovementController.jumpHoldCounter = 0;
+            }
+
+
+            if (MovementController.isJumpCharging)
             {
                 MovementController.jumpHoldCounter += Time.deltaTime;
                 MovementController.jumpHoldCounter = Mathf.Clamp(MovementController.jumpHoldCounter, 0, PlatformerAttributes.maxJumpHoldTime);
@@ -59,19 +62,26 @@ namespace Payosky.Platformer
                 if (Mathf.Approximately(MovementController.jumpHoldCounter, PlatformerAttributes.maxJumpHoldTime))
                 {
                     MovementController.jumpBufferCounter = PlatformerAttributes.jumpBufferTime;
-                    MovementController.doHoldJump = true;
+                    MovementController.isJumpCharging = false;
+                }
+
+                if (MovementController.justLanded && MovementController.jumpHoldCounter > 0)
+                {
+                    MovementController.jumpBufferCounter = PlatformerAttributes.jumpBufferTime;
                     MovementController.isJumpCharging = false;
                 }
             }
 
+
+            MovementController.justLanded = false;
+
             if (!MovementController.isGrounded && !(MovementController.coyoteTimeCounter > 0)) return;
             if (!(MovementController.jumpBufferCounter > 0)) return;
 
-            var jumpForce = PlatformerAttributes.jumpForce * (MovementController.doHoldJump ? PlatformerAttributes.holdJumpCurve.Evaluate(MovementController.jumpHoldCounter) : 1);
+            var jumpForce = PlatformerAttributes.jumpForce * PlatformerAttributes.holdJumpCurve.Evaluate(MovementController.jumpHoldCounter / PlatformerAttributes.maxJumpHoldTime);
             jumpForce -= _playerController.Rigidbody2D.linearVelocityY;
 
             _playerController.Rigidbody2D.AddForceY(jumpForce, ForceMode2D.Impulse);
-            MovementController.doHoldJump = false;
             MovementController.coyoteTimeCounter = 0;
             MovementController.jumpBufferCounter = 0;
             MovementController.jumpHoldCounter = 0;

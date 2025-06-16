@@ -54,7 +54,13 @@ namespace Payosky.Platformer
             var groundCheck = Physics2D.OverlapCircle(_playerController.transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
             var roofCheck = Physics2D.OverlapCircle(_playerController.transform.position + roofCheckOffset, roofCheckRadius, groundLayer);
 
+            var wasGrounded = MovementController.isGrounded;
             MovementController.isGrounded = groundCheck && groundCheck != roofCheck && _playerController.Rigidbody2D.linearVelocityY <= 0;
+
+            if (!wasGrounded && MovementController.isGrounded)
+            {
+                MovementController.justLanded = true;
+            }
 
             if (MovementController.isGrounded)
             {
@@ -70,12 +76,6 @@ namespace Payosky.Platformer
                         MovementController.lastGroundedPosition.x -= horizontalRespawnMargin;
                         break;
                 }
-            }
-            else if (MovementController.isJumpCharging)
-            {
-                MovementController.jumpBufferCounter = PlatformerAttributes.jumpBufferTime;
-                MovementController.doHoldJump = false;
-                MovementController.isJumpCharging = false;
             }
 
             _groundCheckColor = MovementController.isGrounded ? Color.green : Color.red;

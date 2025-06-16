@@ -1,7 +1,11 @@
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Payosky.Platformer
 {
@@ -12,25 +16,39 @@ namespace Payosky.Platformer
 
         private Vector3 _visualsOriginalScale;
 
+        private CancellationTokenSource _springTokenSource;
+
         private void Update()
         {
-            var movementAxis = _controller.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
-
-            _controller.SpriteRenderer.flipX = movementAxis.x switch
-            {
-                < 0 => true,
-                > 0 => false,
-                _ => _controller.SpriteRenderer.flipX
-            };
-
             UpdateAnimator();
         }
 
         protected virtual void UpdateAnimator()
         {
+            _controller.Animator.speed = 1;
+            var movementAxis = _controller.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
+
+            if (movementAxis != Vector2.zero)
+            {
+                _controller.SpriteRenderer.flipX = movementAxis.x switch
+                {
+                    < 0 => true,
+                    > 0 => false,
+                    _ => _controller.SpriteRenderer.flipX
+                };
+            }
+
             if (_controller.MovementController.isGrounded)
             {
-                _controller.Animator.Play(_controller.PlatformerInputActions.Player.Move.inProgress ? "Run" : "Idle");
+                if (_controller.PlatformerInputActions.Player.Move.inProgress && movementAxis != Vector2.zero)
+                {
+                    _controller.Animator.speed = Mathf.Abs(movementAxis.x);
+                    _controller.Animator.Play("Run");
+                }
+                else
+                {
+                    _controller.Animator.Play("Idle");
+                }
             }
             else
             {
@@ -53,6 +71,42 @@ namespace Payosky.Platformer
                 .OnComplete(() => _controller.SpriteRenderer.transform.localScale = _visualsOriginalScale);
         }
 
+        private void HandleSpringAnimation(InputAction.CallbackContext obj)
+        {
+            HandleSpringAnimationAsync(obj).Forget();
+        }
+
+        private void CancelSpringAnimation(InputAction.CallbackContext obj)
+        {
+            _springTokenSource?.Cancel();
+        }
+
+        private async UniTaskVoid HandleSpringAnimationAsync(InputAction.CallbackContext callbackContext)
+        {
+            if (!_controller.MovementController.isGrounded)
+            {
+                return;
+            }
+
+            _springTokenSource?.Cancel();
+            _springTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await _controller.SpriteRenderer.transform.DOScale(
+                        new Vector3(_visualsOriginalScale.x * 1.4f, _visualsOriginalScale.y * 0.6f, 1),
+                        _controller.MovementController.PlatformerAttributes.maxJumpHoldTime)
+                    .WithCancellation(_springTokenSource.Token);
+            }
+            catch (OperationCanceledException ex)
+            {
+            }
+            finally
+            {
+                _controller.SpriteRenderer.transform.localScale = _visualsOriginalScale;
+            }
+        }
+
         public void Init(IPlayerController controller)
         {
             _controller = (PlatformerPlayerController)controller;
@@ -61,12 +115,17 @@ namespace Payosky.Platformer
             _controller.OnDespawn += OnDespawn;
 
             _visualsOriginalScale = _controller.SpriteRenderer.transform.localScale;
+
+            _controller.PlatformerInputActions.Player.Jump.performed += HandleSpringAnimation;
+            _controller.PlatformerInputActions.Player.Jump.canceled += CancelSpringAnimation;
         }
 
         public void Dispose()
         {
             _controller.OnRespawn -= OnRespawn;
             _controller.OnDespawn -= OnDespawn;
+            _controller.PlatformerInputActions.Player.Jump.performed -= HandleSpringAnimation;
+            _controller.PlatformerInputActions.Player.Jump.canceled -= CancelSpringAnimation;
         }
 
         public void OnRespawn(IRespawnable respawnable)
