@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 980222436342999937}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.367, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: -1633508639
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7166236263522030466, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
+  m_Sprite: {fileID: -6367560908665664636, guid: 40de9a8703e2e5a47882b0b86451c741, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -115,10 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CategoryHash: 1.0429618e-14
-  m_labelHash: 1.7193975e-11
+  m_CategoryHash: 0.009161512
+  m_labelHash: 4.511669e-33
   m_SpriteKey: 0
-  m_SpriteHash: 248163047
+  m_SpriteHash: 47513121
 --- !u!1 &1362702971871006887
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,29 +337,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <PlatformerAttributes>k__BackingField: {fileID: 11400000, guid: 14aab4bc6b31d4647b7b32593eb790f0, type: 2}
   <MovementSubsystem>k__BackingField:
-    rid: 5328453479807058191
+    rid: 5328453876438532196
   <JumpSubsystem>k__BackingField:
-    rid: 5328453479807058190
+    rid: 5328453876438532197
   <GroundCheckSubsystem>k__BackingField:
-    rid: 5328453479807058192
+    rid: 5328453876438532198
   coyoteTimeCounter: 0
-  doHoldJump: 0
   isGrounded: 0
   isJumpCharging: 0
+  justLanded: 0
   jumpBufferCounter: 0
   jumpHoldCounter: 0
   lastGroundedPosition: {x: 0, y: 0}
   references:
     version: 2
     RefIds:
-    - rid: 5328453479807058190
-      type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+    - rid: 5328453876438532196
+      type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data: 
-    - rid: 5328453479807058191
-      type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+    - rid: 5328453876438532197
+      type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data: 
-    - rid: 5328453479807058192
-      type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer.Runtime}
+    - rid: 5328453876438532198
+      type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         groundLayer:
           serializedVersion: 2
@@ -394,7 +394,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 1
+  m_LinearDamping: 2
   m_AngularDamping: 0
   m_GravityScale: 6
   m_Material: {fileID: 6200000, guid: c62546232bb656e41a13947db0774707, type: 2}

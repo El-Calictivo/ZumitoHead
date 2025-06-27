@@ -1,0 +1,14 @@
+{
+  "name": "payosky.architecture",
+  "version": "0.0.1",
+  "unity": "6000.0",
+  "displayName": "Payosky Architecture",
+  "relatedPackages": {},
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Various 2D Animation sample scenes to show different usage of the 2D Animation tooling for various outcomes.",
+      "path": "Samples~/AnimationSamples"
+    }
+  ]
+}

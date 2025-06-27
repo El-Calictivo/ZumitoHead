@@ -1,21 +1,23 @@
 {
-  "name": "Payosky.Platformer.Runtime",
-  "rootNamespace": "Payosky.Platformer.Runtime",
-  "references": [
-    "GUID:f00742e78783c404c94e9f42ba3dc21a",
-    "GUID:bda75c11433a2be45993cd127f00bd30",
-    "GUID:f51ebe6a0ceec4240a699833d6309b23",
-    "GUID:75469ad4d38634e559750d17036d5f7c",
-    "GUID:09dcc9c0126b6b34ab2a877b8f2277f5",
-    "GUID:49b49c76ee64f6b41bf28ef951cb0e50"
-  ],
-  "includePlatforms": [],
-  "excludePlatforms": [],
-  "allowUnsafeCode": false,
-  "overrideReferences": false,
-  "precompiledReferences": [],
-  "autoReferenced": true,
-  "defineConstraints": [],
-  "versionDefines": [],
-  "noEngineReferences": false
+    "name": "Payosky.Platformer",
+    "rootNamespace": "Payosky.Platformer",
+    "references": [
+        "GUID:f00742e78783c404c94e9f42ba3dc21a",
+        "GUID:bda75c11433a2be45993cd127f00bd30",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:029c1c1b674aaae47a6841a0b89ad80e",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:38ac5f7bd3c252f4e95d709f38f7e0a6",
+        "GUID:09dcc9c0126b6b34ab2a877b8f2277f5",
+        "GUID:49b49c76ee64f6b41bf28ef951cb0e50"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

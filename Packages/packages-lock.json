@@ -323,6 +323,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "payosky.architecture": {
+      "version": "file:Payosky.Architecture",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "payosky.coremechanics": {
       "version": "file:Payosky.CoreMechanics",
       "depth": 0,
