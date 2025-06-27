@@ -1,10 +1,8 @@
 {
-    "name": "Payosky.PlayerController",
-    "rootNamespace": "Payosky.PlayerController",
+    "name": "Payosky.CoreMechanics.Runtime",
+    "rootNamespace": "Payosky.CoreMechanics.Runtime",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:f00742e78783c404c94e9f42ba3dc21a",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
