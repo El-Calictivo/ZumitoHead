@@ -1,8 +1,10 @@
 {
-    "name": "Payosky.CoreMechanics.Runtime",
-    "rootNamespace": "Payosky.CoreMechanics.Runtime",
+    "name": "Payosky.CoreMechanics",
+    "rootNamespace": "Payosky.CoreMechanics",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:49b49c76ee64f6b41bf28ef951cb0e50",
+        "GUID:d60d37269263a3f4bb0d270e20cd62a3"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

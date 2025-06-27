@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Payosky.Architecture
+namespace Payosky.Architecture.Services
 {
     /// <summary>
     /// ServiceLocator is a static class responsible for managing and providing access to instances of services
