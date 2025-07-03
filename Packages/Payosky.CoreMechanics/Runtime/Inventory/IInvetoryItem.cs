@@ -1,6 +1,11 @@
-public interface IInventoryItem
+using Payosky.CoreMechanics.GameEntitites;
+
+namespace Payosky.CoreMechanics.Inventory
 {
-    string GetID();
-    void OnStored(string ownerID);
-    void OnRemoved(string ownerID);
+    public interface IInventoryItem
+    {
+        string GetID();
+        void OnStored(string ownerEntityID);
+        void OnRemoved(string ownerEntityID);
+    }
 }

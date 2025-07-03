@@ -5,5 +5,13 @@ namespace Payosky.PlayerController.Runtime
         void RegisterMovementSubsystem(MovementSubsystem subsystem);
         void RegisterJumpSubsystem(JumpSubsystem subsystem);
         void RegisterGroundCheckSubsystem(GroundCheckSubsystem subsystem);
+
+        void UnRegisterMovementSubsystem();
+        void UnRegisterJumpSubsystem();
+        void UnRegisterGroundCheckSubsystem();
+
+        MovementSubsystem MovementSubsystem { get; }
+        JumpSubsystem JumpSubsystem { get; }
+        GroundCheckSubsystem GroundCheckSubsystem { get; }
     }
 }

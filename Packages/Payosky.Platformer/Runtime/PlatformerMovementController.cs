@@ -1,3 +1,4 @@
+using Payosky.Architecture.Editor.Attributes;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
@@ -7,9 +8,6 @@ namespace Payosky.Platformer
     [RequireComponent(typeof(PlatformerPlayerController))]
     public sealed class PlatformerMovementController : MonoBehaviour, IPlayerMovementController
     {
-        [field: Space(5)]
-        [field: SerializeField] public PlatformerAttributes PlatformerAttributes { private set; get; }
-
         [field: Space(5)]
         [field: Header("Subsystems")]
         [field: SerializeReference] [field: SubclassSelector]
@@ -22,27 +20,27 @@ namespace Payosky.Platformer
         public GroundCheckSubsystem GroundCheckSubsystem { private set; get; }
 
         [Header("Movement State Information")]
+        [ReadOnly]
         public float coyoteTimeCounter;
 
-        public bool isGrounded;
+        [ReadOnly] public bool isGrounded;
 
-        public bool isJumpCharging;
+        [ReadOnly] public bool isJumpCharging;
 
-        public bool justLanded;
+        [ReadOnly] public bool justLanded;
 
-        public float jumpBufferCounter;
+        [ReadOnly] public float jumpBufferCounter;
 
-        public float jumpHoldCounter;
+        [ReadOnly] public float jumpHoldCounter;
 
-        public Vector2 lastGroundedPosition;
+        [ReadOnly] public Vector2 lastGroundedPosition;
 
         private PlatformerPlayerController _controller;
 
-        private void Update()
+        IPlayerController IPlayerControllerComponent.PlayerController
         {
-            GroundCheckSubsystem?.Update();
-            JumpSubsystem?.Update();
-            MovementSubsystem?.Update();
+            get => _controller;
+            set => _controller = (PlatformerPlayerController)value;
         }
 
         public void Init(IPlayerController controller)
@@ -52,12 +50,16 @@ namespace Payosky.Platformer
             _controller.OnRespawn += OnRespawn;
             _controller.OnDespawn += OnDespawn;
 
-            _controller.PlatformerInputActions.Player.Jump.performed += JumpSubsystem.HandleJump;
-            _controller.PlatformerInputActions.Player.Jump.canceled += JumpSubsystem.HandleJump;
+            RegisterJumpSubsystem(JumpSubsystem);
+            RegisterMovementSubsystem(MovementSubsystem);
+            RegisterGroundCheckSubsystem(GroundCheckSubsystem);
+        }
 
-            MovementSubsystem.SetPlayerController(_controller);
-            JumpSubsystem.SetPlayerController(_controller);
-            GroundCheckSubsystem.SetPlayerController(_controller);
+        private void Update()
+        {
+            GroundCheckSubsystem?.Update();
+            JumpSubsystem?.Update();
+            MovementSubsystem?.Update();
         }
 
         public void Dispose()
@@ -65,8 +67,13 @@ namespace Payosky.Platformer
             _controller.OnRespawn -= OnRespawn;
             _controller.OnDespawn -= OnDespawn;
 
-            _controller.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
-            _controller.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
+            UnRegisterJumpSubsystem();
+            UnRegisterMovementSubsystem();
+            UnRegisterGroundCheckSubsystem();
+        }
+
+        public void OnSpawn(IRespawnable respawnable)
+        {
         }
 
         public void OnRespawn(IRespawnable respawnable)
@@ -83,24 +90,49 @@ namespace Payosky.Platformer
 
         public void RegisterMovementSubsystem(MovementSubsystem subsystem)
         {
+            if (subsystem == null) return;
+
             MovementSubsystem = subsystem;
-            MovementSubsystem?.SetPlayerController(_controller);
+            MovementSubsystem.Initalize(_controller);
         }
 
         public void RegisterJumpSubsystem(JumpSubsystem subsystem)
         {
+            if (subsystem is null) return;
+
             JumpSubsystem = subsystem;
-            JumpSubsystem?.SetPlayerController(_controller);
+            JumpSubsystem.Initalize(_controller);
+            _controller.PlatformerInputActions.Player.Jump.performed += JumpSubsystem.HandleJump;
+            _controller.PlatformerInputActions.Player.Jump.canceled += JumpSubsystem.HandleJump;
         }
 
         public void RegisterGroundCheckSubsystem(GroundCheckSubsystem subsystem)
         {
+            if (subsystem == null) return;
+
             GroundCheckSubsystem = subsystem;
-            GroundCheckSubsystem?.SetPlayerController(_controller);
+            GroundCheckSubsystem.Initalize(_controller);
         }
 
-        public void OnSpawn(IRespawnable respawnable)
+        public void UnRegisterMovementSubsystem()
         {
+            GroundCheckSubsystem = null;
+        }
+
+        public void UnRegisterJumpSubsystem()
+        {
+            if (JumpSubsystem is not null)
+            {
+                _controller.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
+                _controller.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
+            }
+
+            JumpSubsystem = null;
+        }
+
+        public void UnRegisterGroundCheckSubsystem()
+        {
+            GroundCheckSubsystem = null;
         }
     }
 }

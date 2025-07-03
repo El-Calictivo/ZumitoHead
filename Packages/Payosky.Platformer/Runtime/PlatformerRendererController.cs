@@ -14,6 +14,12 @@ namespace Payosky.Platformer
     {
         private PlatformerPlayerController _controller;
 
+        IPlayerController IPlayerControllerComponent.PlayerController
+        {
+            get => _controller;
+            set => _controller = (PlatformerPlayerController)value;
+        }
+
         private Vector3 _visualsOriginalScale;
 
         private CancellationTokenSource _springTokenSource;
@@ -95,7 +101,7 @@ namespace Payosky.Platformer
             {
                 await _controller.SpriteRenderer.transform.DOScale(
                         new Vector3(_visualsOriginalScale.x * 1.4f, _visualsOriginalScale.y * 0.6f, 1),
-                        _controller.MovementController.PlatformerAttributes.maxJumpHoldTime)
+                        _controller.MovementController.JumpSubsystem.MaxJumpHoldTime)
                     .WithCancellation(_springTokenSource.Token);
             }
             catch (OperationCanceledException ex)

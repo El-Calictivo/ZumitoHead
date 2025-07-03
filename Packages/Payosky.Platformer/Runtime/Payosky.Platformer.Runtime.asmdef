@@ -2,6 +2,8 @@
     "name": "Payosky.Platformer",
     "rootNamespace": "Payosky.Platformer",
     "references": [
+        "GUID:d60d37269263a3f4bb0d270e20cd62a3",
+        "GUID:ea160d9f45bdffe4cac89618af061a7a",
         "GUID:f00742e78783c404c94e9f42ba3dc21a",
         "GUID:bda75c11433a2be45993cd127f00bd30",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",

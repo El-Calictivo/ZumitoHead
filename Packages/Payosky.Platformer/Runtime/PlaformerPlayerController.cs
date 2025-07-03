@@ -1,5 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Payosky.Architecture.Services;
+using Payosky.CoreMechanics.GameEntitites;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
@@ -8,8 +10,11 @@ namespace Payosky.Platformer
 {
     public sealed class PlatformerPlayerController : MonoBehaviour, IPlayerController
     {
+        [SerializeField] private string id = "Platformer.Player";
+
         [Header("Components")]
         [field: SerializeField] public Rigidbody2D Rigidbody2D { private set; get; }
+
         [field: SerializeField] public Animator Animator { private set; get; }
         [field: SerializeField] public PlatformerMovementController MovementController { private set; get; }
         [field: SerializeField] public PlatformerRendererController RendererController { private set; get; }
@@ -26,6 +31,11 @@ namespace Payosky.Platformer
             PlatformerInputActions = new PlatformerInputActions();
         }
 
+        private void Start()
+        {
+            RegisterEntity();
+        }
+
         private void OnEnable()
         {
             PlatformerInputActions.Enable();
@@ -36,6 +46,32 @@ namespace Payosky.Platformer
         {
             PlatformerInputActions.Disable();
             DisposeComponents();
+        }
+
+        public string GetID()
+        {
+            return id;
+        }
+
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
+
+        public void RegisterEntity()
+        {
+            if (ServiceLocator.TryGet(out GameEntityService entityService))
+            {
+                entityService.AddEntity(this);
+            }
+        }
+
+        public void UnregisterEntity()
+        {
+            if (ServiceLocator.TryGet(out GameEntityService entityService))
+            {
+                entityService.RemoveEntity(this);
+            }
         }
 
         async UniTask IRespawnable.Despawn()

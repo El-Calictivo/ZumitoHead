@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using Payosky.Architecture.Services;
+using Payosky.CoreMechanics.GameEntitites;
 
 namespace Payosky.CoreMechanics.Inventory
 {
     public class InventoryService : IGameService
     {
-        private Dictionary<string, PlayerInventory> _playerInventories;
+        private Dictionary<IGameEntity, PlayerInventory> _playerInventories;
 
         public void Initialize()
         {
-            _playerInventories = new Dictionary<string, PlayerInventory>();
+            _playerInventories = new Dictionary<IGameEntity, PlayerInventory>();
         }
 
         public void Dispose()
@@ -17,27 +18,26 @@ namespace Payosky.CoreMechanics.Inventory
             _playerInventories?.Clear();
         }
 
-        public void AddItem(string ownerID, IInventoryItem item)
+        public void AddItem(IGameEntity owner, IInventoryItem item)
         {
-            var inventory = GetOrCreateInventory(ownerID);
+            var inventory = GetOrCreateInventory(owner);
             inventory.Add(item);
+            item.OnStored(owner.GetID());
         }
 
-        public void RemoveItemStack(string ownerID, IInventoryItem item)
+        public void RemoveItemStack(IGameEntity owner, IInventoryItem item)
         {
-            if (_playerInventories.TryGetValue(ownerID, out var inventory))
-            {
-                inventory.RemoveStack(item);
-                item.OnRemoved(ownerID);
-            }
+            if (!_playerInventories.TryGetValue(owner, out var inventory)) return;
+            inventory.RemoveStack(item);
+            item.OnRemoved(owner.GetID());
         }
 
-        private PlayerInventory GetOrCreateInventory(string ownerID)
+        private PlayerInventory GetOrCreateInventory(IGameEntity owner)
         {
-            if (_playerInventories.TryGetValue(ownerID, out var inventory)) return inventory;
+            if (_playerInventories.TryGetValue(owner, out var inventory)) return inventory;
 
             inventory = new PlayerInventory();
-            _playerInventories[ownerID] = inventory;
+            _playerInventories[owner] = inventory;
 
             return inventory;
         }

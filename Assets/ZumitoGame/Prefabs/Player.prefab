@@ -318,6 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261018df947fb834a9aff67e0a97a5f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: Platformer.Player
   <Rigidbody2D>k__BackingField: {fileID: 6942444886950892287}
   <Animator>k__BackingField: {fileID: 1867451144077106761}
   <MovementController>k__BackingField: {fileID: 5659212504425172512}
@@ -335,7 +336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f34a249d3dcca45b421cabe00cf4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PlatformerAttributes>k__BackingField: {fileID: 11400000, guid: 14aab4bc6b31d4647b7b32593eb790f0, type: 2}
   <MovementSubsystem>k__BackingField:
     rid: 5328453876438532196
   <JumpSubsystem>k__BackingField:
@@ -354,10 +354,82 @@ MonoBehaviour:
     RefIds:
     - rid: 5328453876438532196
       type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
-      data: 
+      data:
+        MovementSpeed: 64
+        MaxSpeed: 8
     - rid: 5328453876438532197
       type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
-      data: 
+      data:
+        JumpForce: 20
+        MaxJumpHoldTime: 0.1
+        JumpBufferTime: 0.1
+        CoyoteTime: 0.15
+        HoldJumpCurve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.75
+            inSlope: Infinity
+            outSlope: Infinity
+            tangentMode: 103
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.24376827
+          - serializedVersion: 3
+            time: 0.85
+            value: 0.9994195
+            inSlope: Infinity
+            outSlope: Infinity
+            tangentMode: 103
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 0.9
+            value: 1.1
+            inSlope: Infinity
+            outSlope: Infinity
+            tangentMode: 103
+            weightedMode: 0
+            inWeight: 0.029169768
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        MovementApexJumpModifier:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: -15
+            value: 0.75
+            inSlope: -0.0049098036
+            outSlope: -0.0049098036
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.43350214
+          - serializedVersion: 3
+            time: 0
+            value: 1.3
+            inSlope: 0.0034165136
+            outSlope: -0.027438277
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.056139044
+            outWeight: 0.06836017
+          - serializedVersion: 3
+            time: 14.963148
+            value: 1.0922406
+            inSlope: -0.017298283
+            outSlope: -0.017298283
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.08320759
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
     - rid: 5328453876438532198
       type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:

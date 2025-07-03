@@ -1,12 +1,13 @@
-﻿using System;
+using System;
+using Payosky.Platformer;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Payosky.Platformer
+namespace ZumitoGame.PowerUps
 {
     [Serializable]
-    public class PlatformerDefaultJumpSubsystem : JumpSubsystem
+    public class GroundPoundJumpSubsystem : JumpSubsystem
     {
         private PlatformerPlayerController _platformerPlayerController;
 

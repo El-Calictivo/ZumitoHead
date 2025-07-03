@@ -7,6 +7,10 @@ namespace Payosky.Platformer
     [Serializable]
     public class PlatformerDefaultGroundedSubsystem : GroundCheckSubsystem
     {
+        private PlatformerPlayerController _platformerPlayerController;
+
+        private PlatformerMovementController _movementController => _platformerPlayerController.MovementController;
+
         [Header("Ground Check")]
         [SerializeField] private LayerMask groundLayer;
 
@@ -24,16 +28,12 @@ namespace Payosky.Platformer
 
         private Color _groundCheckColor;
 
-        private PlatformerPlayerController _playerController;
-
         private Color _roofCheckColor;
 
-        private PlatformerMovementController MovementController => _playerController.MovementController;
-        private PlatformerAttributes PlatformerAttributes => MovementController.PlatformerAttributes;
-
-        public override void SetPlayerController(IPlayerController playerController)
+        public override void Initalize(IPlayerController playerController)
         {
-            _playerController = (PlatformerPlayerController)playerController;
+            base.Initalize(playerController);
+            _platformerPlayerController = playerController as PlatformerPlayerController;
         }
 
         /// Updates the grounded and roof-check states for the platformer player controller by determining if the player is
@@ -51,34 +51,36 @@ namespace Payosky.Platformer
         /// This method is called once per frame, typically within the MonoBehaviour's Update() method.
         public override void Update()
         {
-            var groundCheck = Physics2D.OverlapCircle(_playerController.transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
-            var roofCheck = Physics2D.OverlapCircle(_playerController.transform.position + roofCheckOffset, roofCheckRadius, groundLayer);
+            if (_platformerPlayerController is null) return;
 
-            var wasGrounded = MovementController.isGrounded;
-            MovementController.isGrounded = groundCheck && groundCheck != roofCheck && _playerController.Rigidbody2D.linearVelocityY <= 0;
+            var groundCheck = Physics2D.OverlapCircle(_platformerPlayerController.transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
+            var roofCheck = Physics2D.OverlapCircle(_platformerPlayerController.transform.position + roofCheckOffset, roofCheckRadius, groundLayer);
 
-            if (!wasGrounded && MovementController.isGrounded)
+            var wasGrounded = _movementController.isGrounded;
+            _movementController.isGrounded = groundCheck && groundCheck != roofCheck && _platformerPlayerController.Rigidbody2D.linearVelocityY <= 0;
+
+            if (!wasGrounded && _movementController.isGrounded)
             {
-                MovementController.justLanded = true;
+                _movementController.justLanded = true;
             }
 
-            if (MovementController.isGrounded)
+            if (_movementController.isGrounded)
             {
-                MovementController.coyoteTimeCounter = PlatformerAttributes.coyoteTime;
+                _movementController.coyoteTimeCounter = _movementController.JumpSubsystem.CoyoteTime;
 
-                MovementController.lastGroundedPosition = _playerController.transform.position;
-                switch (_playerController.Rigidbody2D.linearVelocity.x)
+                _movementController.lastGroundedPosition = _platformerPlayerController.transform.position;
+                switch (_platformerPlayerController.Rigidbody2D.linearVelocity.x)
                 {
                     case < 0:
-                        MovementController.lastGroundedPosition.x += horizontalRespawnMargin;
+                        _movementController.lastGroundedPosition.x += horizontalRespawnMargin;
                         break;
                     case > 0:
-                        MovementController.lastGroundedPosition.x -= horizontalRespawnMargin;
+                        _movementController.lastGroundedPosition.x -= horizontalRespawnMargin;
                         break;
                 }
             }
 
-            _groundCheckColor = MovementController.isGrounded ? Color.green : Color.red;
+            _groundCheckColor = _movementController.isGrounded ? Color.green : Color.red;
             _roofCheckColor = roofCheck ? Color.green : Color.red;
         }
     }

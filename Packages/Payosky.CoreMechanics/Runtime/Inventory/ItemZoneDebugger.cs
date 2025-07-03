@@ -1,4 +1,5 @@
-using System;
+using Payosky.Architecture.Services;
+using Payosky.CoreMechanics.GameEntitites;
 using UnityEngine;
 
 namespace Payosky.CoreMechanics.Inventory
@@ -10,22 +11,26 @@ namespace Payosky.CoreMechanics.Inventory
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.gameObject.name);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log(other.gameObject.name);
+            if (other.attachedRigidbody.TryGetComponent(out IGameEntity entity) && ServiceLocator.TryGet(out InventoryService inventoryService))
+            {
+                inventoryService.AddItem(entity, item);
+            }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            Debug.Log(other.gameObject.name);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            Debug.Log(other.gameObject.name);
+            if (other.attachedRigidbody.TryGetComponent(out IGameEntity entity) && ServiceLocator.TryGet(out InventoryService inventoryService))
+            {
+                inventoryService.RemoveItemStack(entity, item);
+            }
         }
     }
 }
