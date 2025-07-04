@@ -10,10 +10,16 @@ namespace Payosky.Platformer
     {
         private PlatformerPlayerController _platformerPlayerController;
 
+        public AnimationCurve MovementApexJumpModifier;
+
         public override void Initalize(IPlayerController playerController)
         {
             base.Initalize(playerController);
             _platformerPlayerController = playerController as PlatformerPlayerController;
+        }
+
+        public override void Dispose()
+        {
         }
 
         /// <summary>
@@ -26,7 +32,7 @@ namespace Payosky.Platformer
 
             var movementAxis = _platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
 
-            if (Mathf.Abs(_platformerPlayerController.Rigidbody2D.linearVelocityX) < MaxSpeed * (_platformerPlayerController.MovementController.isGrounded ? 1 : _platformerPlayerController.MovementController.JumpSubsystem.MovementApexJumpModifier.Evaluate(_platformerPlayerController.Rigidbody2D.linearVelocityY)))
+            if (Mathf.Abs(_platformerPlayerController.Rigidbody2D.linearVelocityX) < MaxSpeed * (_platformerPlayerController.MovementController.isGrounded ? 1 : MovementApexJumpModifier.Evaluate(_platformerPlayerController.Rigidbody2D.linearVelocityY)))
             {
                 _platformerPlayerController.Rigidbody2D.AddForceX(movementAxis.x * MovementSpeed * Time.deltaTime, ForceMode2D.Impulse);
             }

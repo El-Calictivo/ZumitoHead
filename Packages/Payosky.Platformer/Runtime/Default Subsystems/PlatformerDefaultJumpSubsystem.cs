@@ -12,10 +12,20 @@ namespace Payosky.Platformer
 
         private PlatformerMovementController _movementController => _platformerPlayerController.MovementController;
 
+        public float CoyoteTime = 0.3f;
+
+        public AnimationCurve HoldJumpCurve;
+
+        public float JumpBufferTime = 0.3f;
+
         public override void Initalize(IPlayerController playerController)
         {
             base.Initalize(playerController);
             _platformerPlayerController = playerController as PlatformerPlayerController;
+        }
+
+        public override void Dispose()
+        {
         }
 
         public override void HandleJump(InputAction.CallbackContext context)
@@ -50,11 +60,15 @@ namespace Payosky.Platformer
             _movementController.jumpBufferCounter = Mathf.Clamp(_movementController.jumpBufferCounter - Time.deltaTime, 0, JumpBufferTime);
             _movementController.coyoteTimeCounter = Mathf.Clamp(_movementController.coyoteTimeCounter - Time.deltaTime, 0, CoyoteTime);
 
+            if (_movementController.isGrounded)
+            {
+                _movementController.coyoteTimeCounter = CoyoteTime;
+            }
+
             if (!_movementController.isGrounded && Mathf.Approximately(_movementController.jumpHoldCounter, MaxJumpHoldTime))
             {
                 _movementController.jumpHoldCounter = 0;
             }
-
 
             if (_movementController.isJumpCharging)
             {

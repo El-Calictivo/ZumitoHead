@@ -1,6 +1,7 @@
 using Payosky.Architecture.Services;
 using Payosky.CoreMechanics.GameEntitites;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Payosky.CoreMechanics.Inventory
 {
@@ -8,6 +9,12 @@ namespace Payosky.CoreMechanics.Inventory
     {
         [SerializeReference] [SubclassSelector]
         private IInventoryItem item;
+
+        [SerializeField]
+        private bool removeOnExit;
+
+        [SerializeField]
+        private bool deactivateOnEnter;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -18,6 +25,7 @@ namespace Payosky.CoreMechanics.Inventory
             if (other.attachedRigidbody.TryGetComponent(out IGameEntity entity) && ServiceLocator.TryGet(out InventoryService inventoryService))
             {
                 inventoryService.AddItem(entity, item);
+                gameObject.SetActive(!deactivateOnEnter);
             }
         }
 
@@ -27,7 +35,7 @@ namespace Payosky.CoreMechanics.Inventory
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.attachedRigidbody.TryGetComponent(out IGameEntity entity) && ServiceLocator.TryGet(out InventoryService inventoryService))
+            if (removeOnExit && other.attachedRigidbody.TryGetComponent(out IGameEntity entity) && ServiceLocator.TryGet(out InventoryService inventoryService))
             {
                 inventoryService.RemoveItemStack(entity, item);
             }

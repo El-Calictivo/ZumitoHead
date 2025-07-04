@@ -36,6 +36,10 @@ namespace Payosky.Platformer
             _platformerPlayerController = playerController as PlatformerPlayerController;
         }
 
+        public override void Dispose()
+        {
+        }
+
         /// Updates the grounded and roof-check states for the platformer player controller by determining if the player is
         /// grounded or colliding with a roof. This method also manages coyote time, jump buffering, and jump charging states.
         /// During the update:
@@ -59,15 +63,11 @@ namespace Payosky.Platformer
             var wasGrounded = _movementController.isGrounded;
             _movementController.isGrounded = groundCheck && groundCheck != roofCheck && _platformerPlayerController.Rigidbody2D.linearVelocityY <= 0;
 
-            if (!wasGrounded && _movementController.isGrounded)
-            {
-                _movementController.justLanded = true;
-            }
+
+            _movementController.justLanded = !wasGrounded && _movementController.isGrounded;
 
             if (_movementController.isGrounded)
             {
-                _movementController.coyoteTimeCounter = _movementController.JumpSubsystem.CoyoteTime;
-
                 _movementController.lastGroundedPosition = _platformerPlayerController.transform.position;
                 switch (_platformerPlayerController.Rigidbody2D.linearVelocity.x)
                 {
