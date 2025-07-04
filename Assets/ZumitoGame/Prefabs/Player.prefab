@@ -196,7 +196,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 0.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -357,12 +357,44 @@ MonoBehaviour:
       data:
         MovementSpeed: 64
         MaxSpeed: 8
+        MovementApexJumpModifier:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: -15
+            value: 0.75
+            inSlope: -0.0049098036
+            outSlope: -0.0049098036
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.43350214
+          - serializedVersion: 3
+            time: 0
+            value: 1.3
+            inSlope: 0.0034165136
+            outSlope: -0.027438277
+            tangentMode: 1
+            weightedMode: 0
+            inWeight: 0.056139044
+            outWeight: 0.06836017
+          - serializedVersion: 3
+            time: 14.963148
+            value: 1.0922406
+            inSlope: -0.017298283
+            outSlope: -0.017298283
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.08320759
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
     - rid: 5328453876438532197
       type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         JumpForce: 20
         MaxJumpHoldTime: 0.1
-        JumpBufferTime: 0.1
         CoyoteTime: 0.15
         HoldJumpCurve:
           serializedVersion: 2
@@ -397,39 +429,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        MovementApexJumpModifier:
-          serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: -15
-            value: 0.75
-            inSlope: -0.0049098036
-            outSlope: -0.0049098036
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.43350214
-          - serializedVersion: 3
-            time: 0
-            value: 1.3
-            inSlope: 0.0034165136
-            outSlope: -0.027438277
-            tangentMode: 1
-            weightedMode: 0
-            inWeight: 0.056139044
-            outWeight: 0.06836017
-          - serializedVersion: 3
-            time: 14.963148
-            value: 1.0922406
-            inSlope: -0.017298283
-            outSlope: -0.017298283
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0.08320759
-            outWeight: 0
-          m_PreInfinity: 2
-          m_PostInfinity: 2
-          m_RotationOrder: 4
+        JumpBufferTime: 0.1
     - rid: 5328453876438532198
       type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:

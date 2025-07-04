@@ -13,27 +13,35 @@ namespace ZumitoGame.PowerUps
 
         private PlatformerMovementController _movementController => _platformerPlayerController.MovementController;
 
+        [SerializeField] private float _groundPoundForce = 100f;
+
         public override void Initalize(IPlayerController playerController)
         {
             base.Initalize(playerController);
             _platformerPlayerController = playerController as PlatformerPlayerController;
         }
 
+        public override void Dispose()
+        {
+        }
+
         public override void HandleJump(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                _movementController.isJumpCharging = true;
-
-                if (!_movementController.isGrounded)
+                if (_movementController.isGrounded)
                 {
-                    _movementController.jumpBufferCounter = JumpBufferTime;
+                    _movementController.jumpHoldCounter = 0;
+                    _platformerPlayerController.Rigidbody2D.linearVelocityY = 0;
+                    _movementController.isJumpCharging = true;
+                }
+                else
+                {
+                    _platformerPlayerController.Rigidbody2D.AddForceY(-Mathf.Abs(_groundPoundForce) * (_movementController.jumpHoldCounter / MaxJumpHoldTime));
                 }
             }
             else if (context.canceled)
             {
-                if (!_movementController.isJumpCharging || !(_movementController.jumpHoldCounter < MaxJumpHoldTime)) return;
-                _movementController.jumpBufferCounter = JumpBufferTime;
                 _movementController.isJumpCharging = false;
             }
         }
@@ -48,46 +56,29 @@ namespace ZumitoGame.PowerUps
         {
             if (_platformerPlayerController is null) return;
 
-            _movementController.jumpBufferCounter = Mathf.Clamp(_movementController.jumpBufferCounter - Time.deltaTime, 0, JumpBufferTime);
-            _movementController.coyoteTimeCounter = Mathf.Clamp(_movementController.coyoteTimeCounter - Time.deltaTime, 0, CoyoteTime);
-
-            if (!_movementController.isGrounded && Mathf.Approximately(_movementController.jumpHoldCounter, MaxJumpHoldTime))
-            {
-                _movementController.jumpHoldCounter = 0;
-            }
-
-
             if (_movementController.isJumpCharging)
             {
-                _movementController.jumpHoldCounter += Time.deltaTime;
+                _movementController.jumpHoldCounter += Time.fixedDeltaTime;
                 _movementController.jumpHoldCounter = Mathf.Clamp(_movementController.jumpHoldCounter, 0, MaxJumpHoldTime);
+
+                _platformerPlayerController.Rigidbody2D.AddForceY(JumpForce * (1 - _movementController.jumpHoldCounter / MaxJumpHoldTime));
 
                 if (Mathf.Approximately(_movementController.jumpHoldCounter, MaxJumpHoldTime))
                 {
-                    _movementController.jumpBufferCounter = JumpBufferTime;
-                    _movementController.isJumpCharging = false;
-                }
-
-                if (_movementController.justLanded && _movementController.jumpHoldCounter > 0)
-                {
-                    _movementController.jumpBufferCounter = JumpBufferTime;
                     _movementController.isJumpCharging = false;
                 }
             }
 
+            if (_movementController.justLanded)
+            {
+                HandleOnLanded();
+            }
+        }
 
-            _movementController.justLanded = false;
-
-            if (!_movementController.isGrounded && !(_movementController.coyoteTimeCounter > 0)) return;
-            if (!(_movementController.jumpBufferCounter > 0)) return;
-
-            var jumpForce = JumpForce * HoldJumpCurve.Evaluate(_movementController.jumpHoldCounter / MaxJumpHoldTime);
-            jumpForce -= _platformerPlayerController.Rigidbody2D.linearVelocityY;
-
-            _platformerPlayerController.Rigidbody2D.AddForceY(jumpForce, ForceMode2D.Impulse);
-            _movementController.coyoteTimeCounter = 0;
-            _movementController.jumpBufferCounter = 0;
-            _movementController.jumpHoldCounter = 0;
+        public void HandleOnLanded()
+        {
+            _movementController.isJumpCharging = false;
+            _platformerPlayerController.MovementController.jumpHoldCounter = 0;
         }
     }
 }

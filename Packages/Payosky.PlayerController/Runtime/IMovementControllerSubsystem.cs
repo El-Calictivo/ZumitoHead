@@ -8,6 +8,7 @@ namespace Payosky.PlayerController.Runtime
     public interface IMovementControllerSubsystem
     {
         void Initalize(IPlayerController playerController);
+        void Dispose();
         void Update();
     }
 
@@ -20,14 +21,6 @@ namespace Payosky.PlayerController.Runtime
 
         public float MaxJumpHoldTime = 0.3f;
 
-        public float JumpBufferTime = 0.3f;
-
-        public float CoyoteTime = 0.3f;
-
-        public AnimationCurve HoldJumpCurve;
-
-        public AnimationCurve MovementApexJumpModifier;
-
         public virtual void Initalize(IPlayerController playerController)
         {
             PlayerController = playerController;
@@ -35,6 +28,7 @@ namespace Payosky.PlayerController.Runtime
 
         public abstract void Update();
         public abstract void HandleJump(InputAction.CallbackContext context);
+        public abstract void Dispose();
     }
 
     public abstract class GroundCheckSubsystem : IMovementControllerSubsystem
@@ -47,6 +41,7 @@ namespace Payosky.PlayerController.Runtime
         }
 
         public abstract void Update();
+        public abstract void Dispose();
     }
 
     public abstract class MovementSubsystem : IMovementControllerSubsystem
@@ -64,5 +59,6 @@ namespace Payosky.PlayerController.Runtime
         }
 
         public abstract void Update();
+        public abstract void Dispose();
     }
 }

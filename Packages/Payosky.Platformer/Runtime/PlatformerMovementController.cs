@@ -1,3 +1,4 @@
+using System;
 using Payosky.Architecture.Editor.Attributes;
 using Payosky.CoreMechanics.Runtime;
 using Payosky.PlayerController.Runtime;
@@ -55,7 +56,7 @@ namespace Payosky.Platformer
             RegisterGroundCheckSubsystem(GroundCheckSubsystem);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             GroundCheckSubsystem?.Update();
             JumpSubsystem?.Update();
@@ -116,22 +117,24 @@ namespace Payosky.Platformer
 
         public void UnRegisterMovementSubsystem()
         {
+            if (GroundCheckSubsystem is null) return;
+            GroundCheckSubsystem.Dispose();
             GroundCheckSubsystem = null;
         }
 
         public void UnRegisterJumpSubsystem()
         {
-            if (JumpSubsystem is not null)
-            {
-                _controller.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
-                _controller.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
-            }
-
+            if (JumpSubsystem is null) return;
+            _controller.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
+            _controller.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
+            JumpSubsystem.Dispose();
             JumpSubsystem = null;
         }
 
         public void UnRegisterGroundCheckSubsystem()
         {
+            if (GroundCheckSubsystem is null) return;
+            GroundCheckSubsystem.Dispose();
             GroundCheckSubsystem = null;
         }
     }

@@ -72,7 +72,7 @@ namespace Payosky.Platformer
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            _controller.SpriteRenderer.transform.DOShakeScale(0.1f, other.relativeVelocity * 0.1f, 24).SetRelative()
+            _controller.SpriteRenderer.transform.DOShakeScale(0.1f, Mathf.Clamp(other.relativeVelocity.y * 0.1f, 0.2f, 5), 24).SetRelative()
                 .SetEase(Ease.InOutBounce)
                 .OnComplete(() => _controller.SpriteRenderer.transform.localScale = _visualsOriginalScale);
         }
