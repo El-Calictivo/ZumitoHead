@@ -24,6 +24,8 @@ namespace Payosky.Platformer
 
         public Action<IRespawnable> OnRespawn;
 
+        public Action OnEditorSelected;
+
         public PlatformerInputActions PlatformerInputActions { private set; get; }
 
         private void Awake()
@@ -46,6 +48,11 @@ namespace Payosky.Platformer
         {
             PlatformerInputActions.Disable();
             DisposeComponents();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            OnEditorSelected?.Invoke();
         }
 
         public string GetID()
@@ -98,6 +105,10 @@ namespace Payosky.Platformer
         {
             MovementController?.Dispose();
             RendererController?.Dispose();
+        }
+
+        public void DealDamage(float damage)
+        {
         }
     }
 }

@@ -74,9 +74,9 @@ MonoBehaviour:
       m_SpriteOverride: {fileID: -362971539341918764, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
     - m_Name: Run (32x32)_11
       m_Hash: 284552330
-      m_Sprite: {fileID: 2178398316516280758, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
+      m_Sprite: {fileID: -1994048653, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
       m_FromMain: 0
-      m_SpriteOverride: {fileID: 2178398316516280758, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
+      m_SpriteOverride: {fileID: -1994048653, guid: 552146dbb8bac6f449493bca4b69540f, type: 3}
     m_FromMain: 0
     m_EntryOverrideCount: 12
   - m_Name: Idle
@@ -163,5 +163,5 @@ MonoBehaviour:
     m_FromMain: 0
     m_EntryOverrideCount: 1
   m_PrimaryLibraryGUID: 
-  m_ModificationHash: 638855460359982321
+  m_ModificationHash: 638882218056139085
   m_Version: 1

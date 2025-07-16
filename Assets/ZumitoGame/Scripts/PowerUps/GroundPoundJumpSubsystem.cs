@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Payosky.CoreMechanics.Damage;
 using Payosky.Platformer;
 using Payosky.PlayerController.Runtime;
 using UnityEngine;
@@ -11,38 +13,60 @@ namespace ZumitoGame.PowerUps
     {
         private PlatformerPlayerController _platformerPlayerController;
 
-        private PlatformerMovementController _movementController => _platformerPlayerController.MovementController;
+        private PlatformerMovementController MovementController => _platformerPlayerController.MovementController;
 
-        [SerializeField] private float _groundPoundForce = 100f;
+        [Space(5)]
+        [Header("GroundPond config")]
+        [SerializeField] private Vector2 groundPoundOffset = new(0, -0.5f);
+
+        [SerializeField] private float groundPoundRadius = 0.5f;
+
+        [SerializeField] private float groundPoundForce = 100f;
+
+        [SerializeField] [Range(0f, 1f)] private float groundPoundDamageThreshold = 0.7f;
+
+        [SerializeField] private LayerMask damageableLayerMask = default;
+
+        [Space(5)]
+        [Header("Config")]
+        [SerializeField] private bool drawGizmos = false;
+
+        private bool _doDamage;
 
         public override void Initalize(IPlayerController playerController)
         {
             base.Initalize(playerController);
             _platformerPlayerController = playerController as PlatformerPlayerController;
+            if (_platformerPlayerController != null) _platformerPlayerController.OnEditorSelected += OnDrawGizmos;
         }
 
         public override void Dispose()
         {
+            _platformerPlayerController.OnEditorSelected -= OnDrawGizmos;
         }
 
         public override void HandleJump(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                if (_movementController.isGrounded)
+                if (MovementController.isGrounded)
                 {
-                    _movementController.jumpHoldCounter = 0;
+                    MovementController.jumpHoldCounter = 0;
                     _platformerPlayerController.Rigidbody2D.linearVelocityY = 0;
-                    _movementController.isJumpCharging = true;
+                    MovementController.isJumpCharging = true;
                 }
                 else
                 {
-                    _platformerPlayerController.Rigidbody2D.AddForceY(-Mathf.Abs(_groundPoundForce) * (_movementController.jumpHoldCounter / MaxJumpHoldTime));
+                    _doDamage = MovementController.jumpHoldCounter / MaxJumpHoldTime >= groundPoundDamageThreshold;
+                    if (_doDamage)
+                    {
+                        _platformerPlayerController.Rigidbody2D.AddForceY(-Mathf.Abs(groundPoundForce));
+                    }
                 }
             }
             else if (context.canceled)
             {
-                _movementController.isJumpCharging = false;
+                MovementController.isJumpCharging = false;
             }
         }
 
@@ -56,20 +80,21 @@ namespace ZumitoGame.PowerUps
         {
             if (_platformerPlayerController is null) return;
 
-            if (_movementController.isJumpCharging)
+            if (MovementController.isJumpCharging)
             {
-                _movementController.jumpHoldCounter += Time.fixedDeltaTime;
-                _movementController.jumpHoldCounter = Mathf.Clamp(_movementController.jumpHoldCounter, 0, MaxJumpHoldTime);
+                MovementController.jumpHoldCounter += Time.fixedDeltaTime;
+                MovementController.jumpHoldCounter = Mathf.Clamp(MovementController.jumpHoldCounter, 0, MaxJumpHoldTime);
 
-                _platformerPlayerController.Rigidbody2D.AddForceY(JumpForce * (1 - _movementController.jumpHoldCounter / MaxJumpHoldTime));
+                _platformerPlayerController.Rigidbody2D.AddForceY(JumpForce * (1 - MovementController.jumpHoldCounter / MaxJumpHoldTime));
 
-                if (Mathf.Approximately(_movementController.jumpHoldCounter, MaxJumpHoldTime))
+                if (Mathf.Approximately(MovementController.jumpHoldCounter, MaxJumpHoldTime))
                 {
-                    _movementController.isJumpCharging = false;
+                    MovementController.jumpHoldCounter = MaxJumpHoldTime;
+                    MovementController.isJumpCharging = false;
                 }
             }
 
-            if (_movementController.justLanded)
+            if (MovementController.justLanded)
             {
                 HandleOnLanded();
             }
@@ -77,8 +102,56 @@ namespace ZumitoGame.PowerUps
 
         public void HandleOnLanded()
         {
-            _movementController.isJumpCharging = false;
+            MovementController.isJumpCharging = false;
             _platformerPlayerController.MovementController.jumpHoldCounter = 0;
+
+            if (_doDamage)
+            {
+                DoGroundPoundDamage();
+                _doDamage = false;
+            }
+        }
+
+        private void DoGroundPoundDamage()
+        {
+            var center = (Vector2)_platformerPlayerController.transform.position + groundPoundOffset;
+
+            var results = new List<Collider2D>();
+            var filter = new ContactFilter2D
+            {
+                useLayerMask = true,
+                layerMask = damageableLayerMask,
+                useTriggers = true
+            };
+
+            Physics2D.OverlapCircle(center, groundPoundRadius, filter, results);
+
+            HashSet<Rigidbody2D> processedBodies = new();
+
+            foreach (var col in results)
+            {
+                var rb = col.attachedRigidbody;
+                if (!rb || !processedBodies.Add(rb)) continue;
+
+                if (rb.TryGetComponent<IDamageable>(out var damageable))
+                {
+                    damageable.DealDamage(1);
+                }
+            }
+        }
+
+        public void OnDrawGizmos()
+        {
+            if (!drawGizmos) return;
+            Gizmos.color = _doDamage ? Color.green : Color.red;
+            if (_doDamage)
+            {
+                Gizmos.DrawSphere((Vector2)_platformerPlayerController.transform.position + groundPoundOffset, groundPoundRadius);
+            }
+            else
+            {
+                Gizmos.DrawWireSphere((Vector2)_platformerPlayerController.transform.position + groundPoundOffset, groundPoundRadius);
+            }
         }
     }
 }

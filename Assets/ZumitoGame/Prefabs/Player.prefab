@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: -1633508639
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6367560908665664636, guid: 40de9a8703e2e5a47882b0b86451c741, type: 3}
+  m_Sprite: {fileID: -1363835404106015672, guid: 40de9a8703e2e5a47882b0b86451c741, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -116,9 +116,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_CategoryHash: 0.009161512
-  m_labelHash: 4.511669e-33
+  m_labelHash: 1.046173e-31
   m_SpriteKey: 0
-  m_SpriteHash: 47513121
+  m_SpriteHash: 560671424
 --- !u!1 &1362702971871006887
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,12 +435,13 @@ MonoBehaviour:
       data:
         groundLayer:
           serializedVersion: 2
-          m_Bits: 8
+          m_Bits: 72
         groundCheckOffset: {x: 0, y: -0.33, z: 0}
         groundCheckRadius: 0.12
         horizontalRespawnMargin: 1.5
         roofCheckOffset: {x: 0, y: 0.32, z: 0}
         roofCheckRadius: 0.4
+        drawGizmos: 0
 --- !u!114 &4694612495924117420
 MonoBehaviour:
   m_ObjectHideFlags: 0

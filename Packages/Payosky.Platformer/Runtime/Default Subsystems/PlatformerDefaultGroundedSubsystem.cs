@@ -30,14 +30,20 @@ namespace Payosky.Platformer
 
         private Color _roofCheckColor;
 
+        [Space(5)]
+        [Header("Config")]
+        [SerializeField] private bool drawGizmos = false;
+
         public override void Initalize(IPlayerController playerController)
         {
             base.Initalize(playerController);
             _platformerPlayerController = playerController as PlatformerPlayerController;
+            _platformerPlayerController.OnEditorSelected += OnDrawGizmos;
         }
 
         public override void Dispose()
         {
+            _platformerPlayerController.OnEditorSelected -= OnDrawGizmos;
         }
 
         /// Updates the grounded and roof-check states for the platformer player controller by determining if the player is
@@ -82,6 +88,15 @@ namespace Payosky.Platformer
 
             _groundCheckColor = _movementController.isGrounded ? Color.green : Color.red;
             _roofCheckColor = roofCheck ? Color.green : Color.red;
+        }
+
+        public void OnDrawGizmos()
+        {
+            if (!drawGizmos) return;
+            Gizmos.color = _groundCheckColor;
+            Gizmos.DrawWireSphere(_platformerPlayerController.transform.position + groundCheckOffset, groundCheckRadius);
+            Gizmos.color = _roofCheckColor;
+            Gizmos.DrawWireSphere(_platformerPlayerController.transform.position + roofCheckOffset, roofCheckRadius);
         }
     }
 }
