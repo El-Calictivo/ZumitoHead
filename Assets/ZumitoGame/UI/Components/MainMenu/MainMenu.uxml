@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ZumitoGame/UI/Components/MainMenu/MainMenu.uss?fileID=7433441132597879392&amp;guid=6354c26632b890249bddec8a3e129fd3&amp;type=3#MainMenu" />
+    <Style src="project://database/Assets/ZumitoGame/UI/Components/MainButton/MainButton.uss?fileID=7433441132597879392&amp;guid=21393ebff8fced242ab9eedf9414ce49&amp;type=3#MainButton" />
+    <ui:VisualElement name="VisualElement" class="panel">
+        <ui:Button text="Play" name="PlayButton" class="button" />
+        <ui:Button text="Exit" class="button" />
+    </ui:VisualElement>
+</ui:UXML>

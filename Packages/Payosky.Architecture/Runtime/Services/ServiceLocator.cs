@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Payosky.Utilities.Logging;
+using UnityEngine;
 
 namespace Payosky.Architecture.Services
 {
@@ -24,12 +26,16 @@ namespace Payosky.Architecture.Services
         /// <param name="service">The instance of the service to add.</param>
         /// If the service is successfully added, the Initialize() method of the service will be called.
         /// Only one instance of each service type can be added. Adding a service with a duplicate type will not replace the existing service.
-        public static void Add<T>(T service) where T : IGameService
+        public static T Add<T>(T service) where T : class, IGameService
         {
             if (Services.TryAdd(typeof(T), service))
             {
+                Debug.Log($"{typeof(ServiceLocator).GetLoggingTag()} Adding Service {typeof(T).GetLoggingTag()}");
                 service.Initialize();
+                return service;
             }
+
+            return Services[typeof(T)] as T;
         }
 
         /// Retrieves a registered service of the specified type.
@@ -70,6 +76,7 @@ namespace Payosky.Architecture.Services
         /// It is intended to perform cleanup for all managed services when they are no longer needed.
         public static void Dispose()
         {
+            Debug.Log($"{typeof(ServiceLocator).GetLoggingTag()} Disposing Services");
             foreach (var service in Services.Values) service.Disconnect();
             foreach (var service in Services.Values) service.Dispose();
             Services.Clear();

@@ -1,0 +1,10 @@
+:root {
+}
+
+.panel {
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(41, 0, 14);
+}

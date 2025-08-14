@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ZumitoGame/UI/Components/PauseMenu/PauseMenu.uss?fileID=7433441132597879392&amp;guid=5033060f294c9d4469b942c0326ebd97&amp;type=3#PauseMenu" />
+    <Style src="project://database/Assets/ZumitoGame/UI/Components/MainButton/MainButton.uss?fileID=7433441132597879392&amp;guid=21393ebff8fced242ab9eedf9414ce49&amp;type=3#MainButton" />
+    <ui:VisualElement class="panel">
+        <ui:Label text="Pause" class="title" />
+        <ui:Button text="Continue" class="button" />
+        <ui:Button text="Exit" class="button" />
+    </ui:VisualElement>
+</ui:UXML>

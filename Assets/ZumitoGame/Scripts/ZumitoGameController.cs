@@ -1,7 +1,6 @@
 using Payosky.Architecture;
+using Payosky.Architecture.SceneManager;
 using Payosky.Architecture.Services;
-using Payosky.CoreMechanics.GameEntitites;
-using Payosky.CoreMechanics.Inventory;
 
 namespace ZumitoGame
 {
@@ -9,8 +8,7 @@ namespace ZumitoGame
     {
         protected override void Initialize()
         {
-            ServiceLocator.Add(new GameEntityService());
-            ServiceLocator.Add(new InventoryService());
+            ServiceLocator.Add(new SceneManagerService());
         }
 
         protected override void Dispose()
