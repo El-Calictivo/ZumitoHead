@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Payosky.PlayerController.Runtime
+namespace Payosky.CoreMechanics.PlayerController
 {
     public interface IPlayerInventoryController
     {

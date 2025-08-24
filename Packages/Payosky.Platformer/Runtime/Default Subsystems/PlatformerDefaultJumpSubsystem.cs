@@ -1,5 +1,5 @@
 ﻿using System;
-using Payosky.PlayerController.Runtime;
+using Payosky.CoreMechanics.PlayerController;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

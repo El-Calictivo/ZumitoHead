@@ -2,8 +2,8 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Payosky.CoreMechanics.PlayerController;
 using Payosky.CoreMechanics.Runtime;
-using Payosky.PlayerController.Runtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

@@ -335,12 +335,6 @@
       "source": "embedded",
       "dependencies": {}
     },
-    "payosky.payosky_playercontroller": {
-      "version": "file:Payosky.PlayerController",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
     "payosky.platformer": {
       "version": "file:Payosky.Platformer",
       "depth": 0,

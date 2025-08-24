@@ -1,6 +1,6 @@
 using Payosky.CoreMechanics.Runtime;
 
-namespace Payosky.PlayerController.Runtime
+namespace Payosky.CoreMechanics.PlayerController
 {
     public interface IPlayerControllerComponent
     {

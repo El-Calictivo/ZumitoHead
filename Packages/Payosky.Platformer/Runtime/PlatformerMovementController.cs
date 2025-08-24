@@ -1,7 +1,7 @@
 using System;
 using Payosky.Architecture.Editor.Attributes;
+using Payosky.CoreMechanics.PlayerController;
 using Payosky.CoreMechanics.Runtime;
-using Payosky.PlayerController.Runtime;
 using UnityEngine;
 
 namespace Payosky.Platformer

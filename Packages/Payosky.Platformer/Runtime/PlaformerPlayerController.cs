@@ -2,14 +2,16 @@ using System;
 using Cysharp.Threading.Tasks;
 using Payosky.Architecture.Services;
 using Payosky.CoreMechanics.GameEntitites;
+using Payosky.CoreMechanics.PlayerController;
 using Payosky.CoreMechanics.Runtime;
-using Payosky.PlayerController.Runtime;
 using UnityEngine;
 
 namespace Payosky.Platformer
 {
     public sealed class PlatformerPlayerController : MonoBehaviour, IPlayerController
     {
+        public GameObject GameObject => gameObject;
+
         [SerializeField] private string id = "Platformer.Player";
 
         [Header("Components")]

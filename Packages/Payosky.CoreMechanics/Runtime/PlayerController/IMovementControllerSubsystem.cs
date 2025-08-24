@@ -1,9 +1,7 @@
-﻿using Payosky.CoreMechanics.GameEntitites;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
-namespace Payosky.PlayerController.Runtime
+namespace Payosky.CoreMechanics.PlayerController
 {
     public interface IMovementControllerSubsystem
     {

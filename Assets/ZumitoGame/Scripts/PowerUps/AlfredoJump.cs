@@ -3,7 +3,7 @@ using System;
 using Payosky.Architecture.Services;
 using Payosky.CoreMechanics.GameEntitites;
 using Payosky.CoreMechanics.Inventory;
-using Payosky.PlayerController.Runtime;
+using Payosky.CoreMechanics.PlayerController;
 using UnityEngine;
 
 namespace ZumitoGame.PowerUps

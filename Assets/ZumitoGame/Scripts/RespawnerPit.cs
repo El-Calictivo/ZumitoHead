@@ -18,6 +18,7 @@ namespace ZumitoGame
         private static async UniTask HandleRespawn(IRespawnable respawnable)
         {
             await respawnable.Despawn();
+
             await respawnable.Respawn();
         }
     }
