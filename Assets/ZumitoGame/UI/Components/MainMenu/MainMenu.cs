@@ -27,8 +27,8 @@ namespace ZumitoGame.UI
             _playButton.clicked -= PlayButtonClicked;
             if (ServiceLocator.TryGet(out SceneManagerService sceneManagerService))
             {
-                sceneManagerService.UnloadScene(new MainMenuScene()).Forget();
-                sceneManagerService.LoadScene(new SandoxScene(), new LoadSceneParameters(LoadSceneMode.Additive)).Forget();
+                sceneManagerService.UnloadScene(new Scenes.MainMenu()).Forget();
+                sceneManagerService.LoadScene(new LevelSelection(), new LoadSceneParameters(LoadSceneMode.Additive)).Forget();
             }
         }
 

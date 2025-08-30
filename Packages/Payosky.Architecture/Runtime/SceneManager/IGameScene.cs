@@ -2,7 +2,7 @@
 {
     public interface IGameScene
     {
-        public string GetName();
+        public string Name { get; }
 
         public void OnLoaded();
 

@@ -193,12 +193,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameScene:
-    rid: 9053206439400833178
+    rid: 9053206803301269598
   references:
     version: 2
     RefIds:
-    - rid: 9053206439400833178
-      type: {class: ZumitoGameScene, ns: ZumitoGame.Scenes, asm: ZumitoGame}
+    - rid: 9053206803301269598
+      type: {class: ZumitoGame, ns: ZumitoGame.Scenes, asm: ZumitoGame}
       data: 
 --- !u!4 &1090052902
 Transform:

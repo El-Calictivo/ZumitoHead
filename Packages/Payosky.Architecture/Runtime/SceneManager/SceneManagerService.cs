@@ -23,8 +23,8 @@ namespace Payosky.Architecture.SceneManager
 
         public void OnSceneLoaded(IGameScene scene)
         {
-            Debug.Log($"{this.GetLoggingTag()} Scene {scene.GetName().GetLoggingTag(false)} loaded");
-            if (LoadedScenes.TryAdd(scene.GetName(), scene))
+            Debug.Log($"{this.GetLoggingTag()} Scene {scene.Name.GetLoggingTag(false)} loaded");
+            if (LoadedScenes.TryAdd(scene.Name, scene))
             {
                 scene.OnLoaded();
             }
@@ -32,11 +32,11 @@ namespace Payosky.Architecture.SceneManager
 
         public void OnSceneUnloaded(IGameScene scene)
         {
-            Debug.Log($"{this.GetLoggingTag()} Scene {scene.GetName().GetLoggingTag(false)} unloaded");
-            if (LoadedScenes.Remove(scene.GetName()))
+            Debug.Log($"{this.GetLoggingTag()} Scene {scene.Name.GetLoggingTag(false)} unloaded");
+            if (LoadedScenes.Remove(scene.Name))
             {
                 scene.OnUnloaded();
-                if (StartScene?.GetName() == scene.GetName())
+                if (StartScene?.Name == scene.Name)
                 {
                     StartScene = null;
                 }
@@ -45,13 +45,13 @@ namespace Payosky.Architecture.SceneManager
 
         public async UniTask LoadScene(IGameScene scene, LoadSceneParameters parameters = default)
         {
-            await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scene.GetName(), parameters).ToUniTask();
+            await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scene.Name, parameters).ToUniTask();
             OnSceneLoaded(scene);
         }
 
         public async UniTask UnloadScene(IGameScene scene)
         {
-            await UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene.GetName()).ToUniTask();
+            await UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene.Name).ToUniTask();
             OnSceneUnloaded(scene);
         }
     }
