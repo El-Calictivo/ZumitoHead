@@ -1,10 +1,11 @@
-using Payosky.CoreMechanics.Damage;
+using UnityEngine;
 
 namespace Payosky.CoreMechanics.GameEntitites
 {
-    public interface IGameEntity : IDamageable
+    public interface IGameEntity
     {
-        string GetID();
+        public string EntityID { get; }
+        GameObject GameObject { get; }
         void RegisterEntity();
         void UnregisterEntity();
     }

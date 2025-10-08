@@ -5,7 +5,7 @@ namespace Payosky.CoreMechanics.PlayerController
 {
     public interface IMovementControllerSubsystem
     {
-        void Initalize(IPlayerController playerController);
+        void Initialize(IPlayerController playerController);
         void Dispose();
         void Update();
     }
@@ -19,7 +19,7 @@ namespace Payosky.CoreMechanics.PlayerController
 
         public float MaxJumpHoldTime = 0.3f;
 
-        public virtual void Initalize(IPlayerController playerController)
+        public virtual void Initialize(IPlayerController playerController)
         {
             PlayerController = playerController;
         }
@@ -33,7 +33,7 @@ namespace Payosky.CoreMechanics.PlayerController
     {
         protected IPlayerController PlayerController;
 
-        public virtual void Initalize(IPlayerController playerController)
+        public virtual void Initialize(IPlayerController playerController)
         {
             PlayerController = playerController;
         }
@@ -51,7 +51,7 @@ namespace Payosky.CoreMechanics.PlayerController
 
         public float MaxSpeed = 5;
 
-        public virtual void Initalize(IPlayerController playerController)
+        public virtual void Initialize(IPlayerController playerController)
         {
             PlayerController = playerController;
         }

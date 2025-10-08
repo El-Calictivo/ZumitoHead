@@ -3,19 +3,15 @@ using Cysharp.Threading.Tasks;
 using Payosky.Architecture.Services;
 using Payosky.CoreMechanics.GameEntitites;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ZumitoGame.Entities
 {
     public class Enemy : MonoBehaviour, IGameEntity
     {
-        [SerializeField] private string _id;
-
+        public GameObject GameObject => gameObject;
+        [field: SerializeField] public string EntityID { get; protected set; } = "";
         [field: SerializeField] public Animator Animator { private set; get; }
-
-        public string GetID()
-        {
-            return _id;
-        }
 
         public void RegisterEntity()
         {

@@ -29,12 +29,12 @@ namespace Payosky.CoreMechanics.GameEntitites
 
         public void AddEntity<T>(T controller) where T : MonoBehaviour, IGameEntity
         {
-            _entities.TryAdd(controller.GetID(), controller);
+            _entities.TryAdd(controller.EntityID, controller);
         }
 
         public void RemoveEntity<T>(T controller) where T : MonoBehaviour, IGameEntity
         {
-            _entities.Remove(controller.GetID());
+            _entities.Remove(controller.EntityID);
         }
 
         public void Dispose()

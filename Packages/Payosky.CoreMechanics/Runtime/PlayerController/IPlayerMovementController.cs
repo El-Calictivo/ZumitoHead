@@ -2,6 +2,7 @@ namespace Payosky.CoreMechanics.PlayerController
 {
     public interface IPlayerMovementController : IPlayerControllerComponent
     {
+        IPlayerMovementData MovementData { get; }
         void RegisterMovementSubsystem(MovementSubsystem subsystem);
         void RegisterJumpSubsystem(JumpSubsystem subsystem);
         void RegisterGroundCheckSubsystem(GroundCheckSubsystem subsystem);

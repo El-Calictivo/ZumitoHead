@@ -11,22 +11,22 @@ namespace Payosky.Platformer
     public sealed class PlatformerPlayerController : MonoBehaviour, IPlayerController
     {
         public GameObject GameObject => gameObject;
+        [field: SerializeField] public string EntityID { get; private set; } = "Platformer.Player";
 
-        [SerializeField] private string id = "Platformer.Player";
-
-        [Header("Components")]
+        [field: Header("Components")]
         [field: SerializeField] public Rigidbody2D Rigidbody2D { private set; get; }
 
         [field: SerializeField] public Animator Animator { private set; get; }
-        [field: SerializeField] public PlatformerMovementController MovementController { private set; get; }
-        [field: SerializeField] public PlatformerRendererController RendererController { private set; get; }
+
+        public IPlayerMovementController MovementController { get; set; }
+        public IPlayerRendererController RendererController { get; set; }
+
         [field: SerializeField] public SpriteRenderer SpriteRenderer { private set; get; }
 
-        public Action<IRespawnable> OnDespawn;
-
-        public Action<IRespawnable> OnRespawn;
-
-        public Action OnEditorSelected;
+        //Evemts
+        public event Action<IRespawnable> OnDespawn;
+        public event Action<IRespawnable> OnRespawn;
+        public event Action OnEditorSelected;
 
         public PlatformerInputActions PlatformerInputActions { private set; get; }
 
@@ -43,28 +43,16 @@ namespace Payosky.Platformer
         private void OnEnable()
         {
             PlatformerInputActions.Enable();
-            InitComponents();
         }
 
         private void OnDisable()
         {
             PlatformerInputActions.Disable();
-            DisposeComponents();
         }
 
         private void OnDrawGizmosSelected()
         {
             OnEditorSelected?.Invoke();
-        }
-
-        public string GetID()
-        {
-            return id;
-        }
-
-        public GameObject GetGameObject()
-        {
-            return gameObject;
         }
 
         public void RegisterEntity()
@@ -95,18 +83,6 @@ namespace Payosky.Platformer
             PlatformerInputActions.Enable();
             OnRespawn?.Invoke(this);
             return UniTask.CompletedTask;
-        }
-
-        public void InitComponents(bool includeInactive = false)
-        {
-            MovementController?.Init(this);
-            RendererController?.Init(this);
-        }
-
-        public void DisposeComponents()
-        {
-            MovementController?.Dispose();
-            RendererController?.Dispose();
         }
 
         public void DealDamage(float damage)

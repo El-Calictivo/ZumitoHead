@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 
 namespace Payosky.CoreMechanics.Runtime
@@ -6,5 +7,9 @@ namespace Payosky.CoreMechanics.Runtime
     {
         UniTask Despawn();
         UniTask Respawn();
+
+        //Actions
+        event Action<IRespawnable> OnDespawn;
+        event Action<IRespawnable> OnRespawn;
     }
 }

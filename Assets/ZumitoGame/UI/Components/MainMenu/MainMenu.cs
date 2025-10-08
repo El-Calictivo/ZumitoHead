@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Payosky.Architecture.SceneManager;
 using Payosky.Architecture.Services;
@@ -6,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using ZumitoGame.Scenes;
+using ZumitoGame.Scenes.Levels;
 
 namespace ZumitoGame.UI
 {

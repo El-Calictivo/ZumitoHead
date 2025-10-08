@@ -22,14 +22,14 @@ namespace Payosky.CoreMechanics.Inventory
         {
             var inventory = GetOrCreateInventory(owner);
             inventory.Add(item);
-            item.OnStored(owner.GetID());
+            item.OnStored(owner.EntityID);
         }
 
         public void RemoveItemStack(IGameEntity owner, IInventoryItem item)
         {
             if (!_playerInventories.TryGetValue(owner, out var inventory)) return;
             inventory.RemoveStack(item);
-            item.OnRemoved(owner.GetID());
+            item.OnRemoved(owner.EntityID);
         }
 
         private PlayerInventory GetOrCreateInventory(IGameEntity owner)

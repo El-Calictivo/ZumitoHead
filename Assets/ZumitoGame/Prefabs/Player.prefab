@@ -54,6 +54,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,6 +77,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1633508639
   m_SortingLayer: 2
   m_SortingOrder: 0
@@ -172,6 +175,8 @@ TrailRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -193,6 +198,7 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -318,11 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261018df947fb834a9aff67e0a97a5f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: Platformer.Player
+  <EntityID>k__BackingField: Platformer.Player
   <Rigidbody2D>k__BackingField: {fileID: 6942444886950892287}
   <Animator>k__BackingField: {fileID: 1867451144077106761}
-  <MovementController>k__BackingField: {fileID: 5659212504425172512}
-  <RendererController>k__BackingField: {fileID: 4694612495924117420}
   <SpriteRenderer>k__BackingField: {fileID: 5196077493109247442}
 --- !u!114 &5659212504425172512
 MonoBehaviour:
@@ -337,26 +341,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MovementSubsystem>k__BackingField:
-    rid: 5328453876438532196
+    rid: 2994818064075194497
   <JumpSubsystem>k__BackingField:
     rid: 5328453876438532197
   <GroundCheckSubsystem>k__BackingField:
     rid: 5328453876438532198
-  coyoteTimeCounter: 0
-  isGrounded: 0
-  isJumpCharging: 0
-  justLanded: 0
-  jumpBufferCounter: 0
-  jumpHoldCounter: 0
-  lastGroundedPosition: {x: 0, y: 0}
+  movementData:
+    rid: 2994818064075194490
   references:
     version: 2
     RefIds:
-    - rid: 5328453876438532196
+    - rid: 2994818064075194490
+      type: {class: PlatformerMovementData, ns: Payosky.Platformer, asm: Payosky.Platformer}
+      data:
+        coyoteTimeCounter: 0
+        isGrounded: 0
+        isJumpCharging: 0
+        justLanded: 0
+        jumpBufferCounter: 0
+        jumpHoldCounter: 0
+        lastGroundedPosition: {x: 0, y: 0}
+    - rid: 2994818064075194497
       type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         MovementSpeed: 64
-        MaxSpeed: 8
+        MaxSpeed: 5
         MovementApexJumpModifier:
           serializedVersion: 2
           m_Curve:
@@ -625,6 +634,8 @@ TrailRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -646,6 +657,7 @@ TrailRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0

@@ -8,9 +8,9 @@ namespace Payosky.Architecture.Editor.Attributes
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            GUI.enabled = false; // disable editing
+            GUI.enabled = false;
             EditorGUI.PropertyField(position, property, label, true);
-            GUI.enabled = true; // re-enable after drawing
+            GUI.enabled = true;
         }
     }
 }

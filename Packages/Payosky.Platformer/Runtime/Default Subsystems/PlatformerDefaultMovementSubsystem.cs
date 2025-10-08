@@ -1,5 +1,4 @@
 ﻿using System;
-using Payosky.CoreMechanics.GameEntitites;
 using Payosky.CoreMechanics.PlayerController;
 using UnityEngine;
 
@@ -8,15 +7,7 @@ namespace Payosky.Platformer
     [Serializable]
     public class PlatformerDefaultMovementSubsystem : MovementSubsystem
     {
-        private PlatformerPlayerController _platformerPlayerController;
-
         public AnimationCurve MovementApexJumpModifier;
-
-        public override void Initalize(IPlayerController playerController)
-        {
-            base.Initalize(playerController);
-            _platformerPlayerController = playerController as PlatformerPlayerController;
-        }
 
         public override void Dispose()
         {
@@ -27,14 +18,29 @@ namespace Payosky.Platformer
         /// </summary>
         public override void Update()
         {
-            if (_platformerPlayerController is null) return;
-            if (!_platformerPlayerController.PlatformerInputActions.Player.Move.inProgress) return;
-
-            var movementAxis = _platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
-
-            if (Mathf.Abs(_platformerPlayerController.Rigidbody2D.linearVelocityX) < MaxSpeed * (_platformerPlayerController.MovementController.isGrounded ? 1 : MovementApexJumpModifier.Evaluate(_platformerPlayerController.Rigidbody2D.linearVelocityY)))
+            if (PlayerController is not PlatformerPlayerController
+                {
+                    MovementController: PlatformerMovementController { MovementData: PlatformerMovementData platformerMovementData },
+                    PlatformerInputActions:
+                    {
+                        Player:
+                        {
+                            Move:
+                            {
+                                inProgress: true
+                            }
+                        }
+                    }
+                } platformerPlayerController)
             {
-                _platformerPlayerController.Rigidbody2D.AddForceX(movementAxis.x * MovementSpeed * Time.deltaTime, ForceMode2D.Impulse);
+                return;
+            }
+
+            var movementAxis = platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
+
+            if (Mathf.Abs(platformerPlayerController.Rigidbody2D.linearVelocityX) < MaxSpeed * (platformerMovementData.IsGrounded ? 1 : MovementApexJumpModifier.Evaluate(platformerPlayerController.Rigidbody2D.linearVelocityY)))
+            {
+                platformerPlayerController.Rigidbody2D.AddForceX(movementAxis.x * MovementSpeed * Time.deltaTime, ForceMode2D.Impulse);
             }
         }
     }
