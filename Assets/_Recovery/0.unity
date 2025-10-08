@@ -467,8 +467,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
+  m_RequiresDepthTextureOption: 0
+  m_RequiresOpaqueTextureOption: 0
   m_CameraType: 0
   m_Cameras: []
   m_RendererIndex: -1
@@ -572,9 +572,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b49dd149c3ffa946b3a3c5adf02387f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4.5
+  speed: 10
   rigidbody: {fileID: 977558227}
-  spriteRenderer: {fileID: 71198609}
 --- !u!1 &1462182461
 GameObject:
   m_ObjectHideFlags: 0
