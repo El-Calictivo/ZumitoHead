@@ -354,18 +354,17 @@ MonoBehaviour:
     - rid: 2994818064075194490
       type: {class: PlatformerMovementData, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
-        coyoteTimeCounter: 0
-        isGrounded: 0
-        isJumpCharging: 0
-        justLanded: 0
-        jumpBufferCounter: 0
-        jumpHoldCounter: 0
-        lastGroundedPosition: {x: 0, y: 0}
+        CoyoteTimeCounter: 0
+        IsGrounded: 0
+        IsJumpCharging: 0
+        JustLanded: 0
+        JumpBufferCounter: 0
+        JumpHoldCounter: 0
+        LastGroundedPosition: {x: 0, y: 0}
     - rid: 2994818064075194497
       type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
-        MovementSpeed: 64
-        MaxSpeed: 5
+        MovementSpeed: 350
         MovementApexJumpModifier:
           serializedVersion: 2
           m_Curve:
