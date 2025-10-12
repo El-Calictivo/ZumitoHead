@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4764171313292991835}
   - component: {fileID: 8351931951278323210}
   - component: {fileID: 8552663957207002490}
+  - component: {fileID: 7832720631110316366}
   m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
@@ -54,6 +55,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,6 +78,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 578948119
   m_SortingLayer: 1
   m_SortingOrder: 0
@@ -154,3 +158,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.19, y: 0.68}
   m_EdgeRadius: 0
+--- !u!114 &7832720631110316366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9067083178202450057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d5950dcce3e419292d61052170f9637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Payosky.CoreMechanics::Payosky.CoreMechanics.Juice.RetroSteppable
+  <Particle>k__BackingField: {fileID: 21300000, guid: 442a785ded19b9c4f9592281f8cccb92, type: 3}
