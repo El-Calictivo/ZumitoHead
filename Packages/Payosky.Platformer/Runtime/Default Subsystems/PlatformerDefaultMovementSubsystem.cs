@@ -37,8 +37,21 @@ namespace Payosky.Platformer
             }
 
             var movementAxis = platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>().x;
+
             movementAxis *= platformerMovementData.IsGrounded ? 1 : MovementApexJumpModifier.Evaluate(platformerPlayerController.Rigidbody2D.linearVelocityY);
-            platformerPlayerController.Rigidbody2D.linearVelocityX = movementAxis * MovementSpeed * Time.deltaTime;
+
+            switch (platformerPlayerController.PlatformerInputActions.Player.Sprint.inProgress)
+            {
+                case true:
+                    platformerPlayerController.Rigidbody2D.AddRelativeForceX(movementAxis * SprintMovementSpeed);
+                    platformerPlayerController.Rigidbody2D.linearVelocityX = Math.Clamp(platformerPlayerController.Rigidbody2D.linearVelocityX, -SprintMaxMovementSpeed, SprintMaxMovementSpeed);
+                    break;
+
+                case false:
+                    platformerPlayerController.Rigidbody2D.AddRelativeForceX(movementAxis * MovementSpeed);
+                    platformerPlayerController.Rigidbody2D.linearVelocityX = Math.Clamp(platformerPlayerController.Rigidbody2D.linearVelocityX, -MaxMovementSpeed, MaxMovementSpeed);
+                    break;
+            }
         }
     }
 }

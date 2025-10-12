@@ -47,7 +47,13 @@ namespace Payosky.CoreMechanics.PlayerController
         protected IPlayerController PlayerController;
 
         [Header("Movement")]
-        public float MovementSpeed = 350;
+        public float MovementSpeed = 50;
+
+        [Min(0)] public float MaxMovementSpeed = 7f;
+
+        public float SprintMovementSpeed = 60;
+
+        [Min(0)] public float SprintMaxMovementSpeed = 12f;
 
         public virtual void Initialize(IPlayerController playerController)
         {

@@ -61,6 +61,12 @@ namespace Payosky.Platformer
                 if (platformerPlayerController.PlatformerInputActions.Player.Move.inProgress && movementAxis != Vector2.zero)
                 {
                     platformerPlayerController.Animator.speed = Mathf.Abs(movementAxis.x);
+                    if (platformerPlayerController.PlatformerInputActions.Player.Sprint.inProgress)
+                    {
+                        platformerPlayerController.Animator.speed *= 1.5f;
+                    }
+
+
                     platformerPlayerController.Animator.Play("Run");
                 }
                 else
