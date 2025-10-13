@@ -1,11 +1,12 @@
+using System;
 using Payosky.CoreMechanics.PlayerController;
 using Payosky.CoreMechanics.Runtime;
 using UnityEngine;
 
 namespace Payosky.Platformer
 {
-    [RequireComponent(typeof(IPlayerController))]
-    public sealed class PlatformerMovementController : MonoBehaviour, IPlayerMovementController
+    [Serializable]
+    public sealed class PlatformerMovementController : IPlayerMovementController
     {
         public IPlayerController PlayerController { get; private set; }
         public IPlayerMovementData MovementData => movementData;
@@ -27,60 +28,21 @@ namespace Payosky.Platformer
         [SerializeReference]
         private PlatformerMovementData movementData = new();
 
-        private void OnEnable()
-        {
-            if (TryGetComponent(out IPlayerController controller))
-            {
-                Init(controller);
-            }
-        }
-
-        private void OnDisable()
-        {
-            Dispose();
-        }
-
         public void Init(IPlayerController controller)
         {
             PlayerController = controller;
             PlayerController.MovementController = this;
-
-            PlayerController.OnRespawn += OnRespawn;
-            PlayerController.OnDespawn += OnDespawn;
 
             RegisterJumpSubsystem(JumpSubsystem);
             RegisterMovementSubsystem(MovementSubsystem);
             RegisterGroundCheckSubsystem(GroundCheckSubsystem);
         }
 
-        private void FixedUpdate()
-        {
-            GroundCheckSubsystem?.Update();
-            JumpSubsystem?.Update();
-            MovementSubsystem?.Update();
-        }
-
         public void Dispose()
         {
-            PlayerController.OnRespawn -= OnRespawn;
-            PlayerController.OnDespawn -= OnDespawn;
-
             UnRegisterJumpSubsystem();
             UnRegisterMovementSubsystem();
             UnRegisterGroundCheckSubsystem();
-        }
-
-        public void OnSpawn(IRespawnable respawnable)
-        {
-        }
-
-        public void OnRespawn(IRespawnable respawnable)
-        {
-            if (PlayerController is PlatformerPlayerController platformerPlayerController)
-            {
-                platformerPlayerController.Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
-                platformerPlayerController.Rigidbody2D.linearVelocity = Vector2.zero;
-            }
         }
 
         public void OnDespawn(IRespawnable respawnable)
@@ -105,8 +67,8 @@ namespace Payosky.Platformer
             JumpSubsystem = subsystem;
             JumpSubsystem.Initialize(PlayerController);
 
-            platformerPlayerController.PlatformerInputActions.Player.Jump.performed += JumpSubsystem.HandleJump;
-            platformerPlayerController.PlatformerInputActions.Player.Jump.canceled += JumpSubsystem.HandleJump;
+            // platformerPlayerController.PlatformerInputActions.Player.Jump.performed += JumpSubsystem.HandleJump;
+            // platformerPlayerController.PlatformerInputActions.Player.Jump.canceled += JumpSubsystem.HandleJump;
         }
 
         public void RegisterGroundCheckSubsystem(GroundCheckSubsystem subsystem)
@@ -128,8 +90,8 @@ namespace Payosky.Platformer
         {
             if (PlayerController is not PlatformerPlayerController platformerPlayerController) return;
 
-            platformerPlayerController.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
-            platformerPlayerController.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
+            // platformerPlayerController.PlatformerInputActions.Player.Jump.performed -= JumpSubsystem.HandleJump;
+            // platformerPlayerController.PlatformerInputActions.Player.Jump.canceled -= JumpSubsystem.HandleJump;
             JumpSubsystem.Dispose();
             JumpSubsystem = null;
         }

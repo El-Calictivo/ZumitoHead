@@ -284,8 +284,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3733290925511859003}
   - component: {fileID: 5330680586334706353}
-  - component: {fileID: 5659212504425172512}
-  - component: {fileID: 4694612495924117420}
   - component: {fileID: 6942444886950892287}
   - component: {fileID: 1867451144077106761}
   - component: {fileID: 1390652140082929847}
@@ -329,33 +327,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EntityID>k__BackingField: Platformer.Player
+  <MovementController>k__BackingField:
+    rid: 2994818183502233728
+  <RendererController>k__BackingField:
+    rid: 2994818183502233730
   <Rigidbody2D>k__BackingField: {fileID: 6942444886950892287}
   <Animator>k__BackingField: {fileID: 1867451144077106761}
-  <SpriteRenderer>k__BackingField: {fileID: 5196077493109247442}
---- !u!114 &5659212504425172512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2857988392130802581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18f34a249d3dcca45b421cabe00cf4ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <MovementSubsystem>k__BackingField:
-    rid: 2994818064075194497
-  <JumpSubsystem>k__BackingField:
-    rid: 5328453876438532197
-  <GroundCheckSubsystem>k__BackingField:
-    rid: 5328453876438532198
-  movementData:
-    rid: 2994818064075194490
+  <Renderer>k__BackingField: {fileID: 5196077493109247442}
+  debug: 1
   references:
     version: 2
     RefIds:
-    - rid: 2994818064075194490
+    - rid: 2994818183502233728
+      type: {class: PlatformerMovementController, ns: Payosky.Platformer, asm: Payosky.Platformer}
+      data:
+        <MovementSubsystem>k__BackingField:
+          rid: 2994818183502233731
+        <JumpSubsystem>k__BackingField:
+          rid: 2994818183502233733
+        <GroundCheckSubsystem>k__BackingField:
+          rid: 2994818183502233734
+        movementData:
+          rid: 2994818183502233729
+    - rid: 2994818183502233729
       type: {class: PlatformerMovementData, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         CoyoteTimeCounter: 0
@@ -365,7 +359,10 @@ MonoBehaviour:
         JumpBufferCounter: 0
         JumpHoldCounter: 0
         LastGroundedPosition: {x: 0, y: 0}
-    - rid: 2994818064075194497
+    - rid: 2994818183502233730
+      type: {class: PlatformerRendererController, ns: Payosky.Platformer, asm: Payosky.Platformer}
+      data: 
+    - rid: 2994818183502233731
       type: {class: PlatformerDefaultMovementSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         MovementSpeed: 45
@@ -405,10 +402,10 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    - rid: 5328453876438532197
+    - rid: 2994818183502233733
       type: {class: PlatformerDefaultJumpSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
-        JumpForce: 20
+        JumpForce: 12
         MaxJumpHoldTime: 0.1
         CoyoteTime: 0.15
         HoldJumpCurve:
@@ -445,7 +442,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         JumpBufferTime: 0.1
-    - rid: 5328453876438532198
+    - rid: 2994818183502233734
       type: {class: PlatformerDefaultGroundedSubsystem, ns: Payosky.Platformer, asm: Payosky.Platformer}
       data:
         groundLayer:
@@ -457,18 +454,6 @@ MonoBehaviour:
         roofCheckOffset: {x: 0, y: 0.32, z: 0}
         roofCheckRadius: 0.4
         drawGizmos: 0
---- !u!114 &4694612495924117420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2857988392130802581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fae9fd9c96a54923b4d17272781bc560, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &6942444886950892287
 Rigidbody2D:
   serializedVersion: 5

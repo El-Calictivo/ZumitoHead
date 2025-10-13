@@ -4,55 +4,74 @@ using Payosky.Architecture.Services;
 using Payosky.CoreMechanics.GameEntitites;
 using Payosky.CoreMechanics.PlayerController;
 using Payosky.CoreMechanics.Runtime;
+using Payosky.Platformer.States;
+using Payosky.Utilities.Logging;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Payosky.Platformer
 {
     public sealed class PlatformerPlayerController : MonoBehaviour, IPlayerController
     {
-        public GameObject GameObject => gameObject;
         [field: SerializeField] public string EntityID { get; private set; } = "Platformer.Player";
+        public IPlayerState CurrentState { get; private set; }
+        public GameObject GameObject => gameObject;
+
+        [field: Header("Player Controller Components")]
+        [field: SerializeReference] [field: SubclassSelector]
+        public IPlayerMovementController MovementController { get; set; }
+
+        [field: SerializeReference] [field: SubclassSelector]
+        public IPlayerRendererController RendererController { get; set; }
 
         [field: Header("Components")]
         [field: SerializeField] public Rigidbody2D Rigidbody2D { private set; get; }
 
         [field: SerializeField] public Animator Animator { private set; get; }
 
-        public IPlayerMovementController MovementController { get; set; }
-        public IPlayerRendererController RendererController { get; set; }
+        [field: SerializeField] public Renderer Renderer { private set; get; }
 
-        [field: SerializeField] public SpriteRenderer SpriteRenderer { private set; get; }
-
-        //Evemts
+        //Events
         public event Action<IRespawnable> OnDespawn;
         public event Action<IRespawnable> OnRespawn;
         public event Action OnEditorSelected;
 
-        public PlatformerInputActions PlatformerInputActions { private set; get; }
+        public IInputActionCollection2 InputActions { set; get; }
 
-        private void Awake()
+        [Header("Settings")]
+        [SerializeField] private bool debug;
+
+        public async UniTask SetState(IPlayerState playerState)
         {
-            PlatformerInputActions = new PlatformerInputActions();
+            if (CurrentState != null)
+            {
+                if (debug) Debug.Log($"{typeof(PlatformerPlayerController).GetLoggingTag()}: Exiting {CurrentState.GetType().Name} State");
+                await CurrentState.Exit();
+            }
+
+            CurrentState = playerState;
+            if (CurrentState != null)
+            {
+                if (debug) Debug.Log($"{typeof(PlatformerPlayerController).GetLoggingTag()}: Starting {CurrentState.GetType().Name} State");
+                await CurrentState.Start();
+            }
         }
 
         private void Start()
         {
             RegisterEntity();
+            SetState(new PlatformerSpawnState(this)).Forget();
         }
 
-        private void OnEnable()
+        private void Update()
         {
-            PlatformerInputActions.Enable();
+            CurrentState?.Update();
         }
 
-        private void OnDisable()
+        private void FixedUpdate()
         {
-            PlatformerInputActions.Disable();
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            OnEditorSelected?.Invoke();
+            CurrentState?.FixedUpdate();
         }
 
         public void RegisterEntity()
@@ -73,16 +92,12 @@ namespace Payosky.Platformer
 
         async UniTask IRespawnable.Despawn()
         {
-            PlatformerInputActions.Disable();
-            OnDespawn?.Invoke(this);
             await UniTask.Delay(1500);
         }
 
-        UniTask IRespawnable.Respawn()
+        async UniTask IRespawnable.Respawn()
         {
-            PlatformerInputActions.Enable();
-            OnRespawn?.Invoke(this);
-            return UniTask.CompletedTask;
+            await SetState(new PlatformerSpawnState(this));
         }
 
         public void DealDamage(float damage)

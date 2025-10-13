@@ -44,6 +44,15 @@ namespace Payosky.CoreMechanics.PlayerController
 
     public abstract class MovementSubsystem : IMovementControllerSubsystem
     {
+        public enum MovementMode
+        {
+            Walk,
+
+            Sprint,
+
+            Dash
+        }
+
         protected IPlayerController PlayerController;
 
         [Header("Movement")]
@@ -59,6 +68,8 @@ namespace Payosky.CoreMechanics.PlayerController
         {
             PlayerController = playerController;
         }
+
+        public abstract void MoveHorizontally(Vector2 movement, MovementMode mode);
 
         public abstract void Update();
         public abstract void Dispose();

@@ -6,8 +6,7 @@ namespace Payosky.CoreMechanics.PlayerController
     {
         public IPlayerController PlayerController { get; }
         public void Init(IPlayerController playerController);
+
         public void Dispose();
-        public void OnRespawn(IRespawnable respawnable);
-        public void OnDespawn(IRespawnable respawnable);
     }
 }

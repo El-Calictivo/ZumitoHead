@@ -13,6 +13,25 @@ namespace Payosky.Platformer
         {
         }
 
+        public override void MoveHorizontally(Vector2 movement, MovementMode mode = MovementMode.Walk)
+        {
+            if (PlayerController is PlatformerPlayerController platformerPlayerController)
+            {
+                switch (mode)
+                {
+                    case MovementMode.Walk:
+                        platformerPlayerController.Rigidbody2D.AddRelativeForceX(movement.x * MovementSpeed);
+                        platformerPlayerController.Rigidbody2D.linearVelocityX = Math.Clamp(platformerPlayerController.Rigidbody2D.linearVelocityX, -MaxMovementSpeed, MaxMovementSpeed);
+                        break;
+
+                    case MovementMode.Sprint:
+                        platformerPlayerController.Rigidbody2D.AddRelativeForceX(movement.x * SprintMovementSpeed);
+                        platformerPlayerController.Rigidbody2D.linearVelocityX = Math.Clamp(platformerPlayerController.Rigidbody2D.linearVelocityX, -SprintMaxMovementSpeed, SprintMaxMovementSpeed);
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         ///     Updates the movement mechanics of the platformer entity based on player input and movement constraints.
         /// </summary>
@@ -21,7 +40,7 @@ namespace Payosky.Platformer
             if (PlayerController is not PlatformerPlayerController
                 {
                     MovementController: PlatformerMovementController { MovementData: PlatformerMovementData platformerMovementData },
-                    PlatformerInputActions:
+                    InputActions: PlatformerInputActions
                     {
                         Player:
                         {
@@ -30,17 +49,17 @@ namespace Payosky.Platformer
                                 inProgress: true
                             }
                         }
-                    }
+                    } platformerInputAction
                 } platformerPlayerController)
             {
                 return;
             }
 
-            var movementAxis = platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>().x;
+            var movementAxis = platformerInputAction.Player.Move.ReadValue<Vector2>().x;
 
             movementAxis *= platformerMovementData.IsGrounded ? 1 : MovementApexJumpModifier.Evaluate(platformerPlayerController.Rigidbody2D.linearVelocityY);
 
-            switch (platformerPlayerController.PlatformerInputActions.Player.Sprint.inProgress)
+            switch (platformerInputAction.Player.Sprint.inProgress)
             {
                 case true:
                     platformerPlayerController.Rigidbody2D.AddRelativeForceX(movementAxis * SprintMovementSpeed);

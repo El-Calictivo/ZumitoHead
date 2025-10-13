@@ -9,8 +9,8 @@ using UnityEngine.InputSystem;
 
 namespace Payosky.Platformer
 {
-    [RequireComponent(typeof(PlatformerPlayerController))]
-    public sealed class PlatformerRendererController : MonoBehaviour, IPlayerRendererController
+    [Serializable]
+    public sealed class PlatformerRendererController : IPlayerRendererController
     {
         public IPlayerController PlayerController { get; private set; }
 
@@ -18,22 +18,38 @@ namespace Payosky.Platformer
 
         private CancellationTokenSource _springTokenSource;
 
-        private void OnEnable()
+        public void Init(IPlayerController controller)
         {
-            if (TryGetComponent(out IPlayerController controller))
-            {
-                Init(controller);
-            }
+            PlayerController = controller;
+            PlayerController.RendererController = this;
         }
 
-        private void OnDisable()
-        {
-            Dispose();
-        }
-
-        private void Update()
+        public void Update()
         {
             UpdateAnimator();
+        }
+
+        public void PlayAnimation(string animationID)
+        {
+            PlayerController.Animator.Play(animationID);
+        }
+
+        public void SetAnimationSpeed(float speed)
+        {
+            PlayerController.Animator.speed = speed;
+        }
+
+        public void HandleVelocityDirection(Vector3 flipVector)
+        {
+            if (PlayerController.Renderer is SpriteRenderer renderer)
+            {
+                renderer.flipX = flipVector.x switch
+                {
+                    > 0 => false,
+                    < 0 => true,
+                    _ => renderer.flipX
+                };
+            }
         }
 
         private void UpdateAnimator()
@@ -44,58 +60,51 @@ namespace Payosky.Platformer
             }
 
             PlayerController.Animator.speed = 1;
-            var movementAxis = platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
+            // var movementAxis = platformerPlayerController.PlatformerInputActions.Player.Move.ReadValue<Vector2>();
 
-            if (movementAxis != Vector2.zero)
-            {
-                platformerPlayerController.SpriteRenderer.flipX = movementAxis.x switch
-                {
-                    < 0 => true,
-                    > 0 => false,
-                    _ => platformerPlayerController.SpriteRenderer.flipX
-                };
-            }
-
-            if (platformerMovementData.IsGrounded)
-            {
-                if (platformerPlayerController.PlatformerInputActions.Player.Move.inProgress && movementAxis != Vector2.zero)
-                {
-                    platformerPlayerController.Animator.speed = Mathf.Abs(movementAxis.x);
-                    if (platformerPlayerController.PlatformerInputActions.Player.Sprint.inProgress)
-                    {
-                        platformerPlayerController.Animator.speed *= 1.5f;
-                    }
-
-
-                    platformerPlayerController.Animator.Play("Run");
-                }
-                else
-                {
-                    platformerPlayerController.Animator.Play("Idle");
-                }
-            }
-            else
-            {
-                switch (platformerPlayerController.Rigidbody2D.linearVelocityY)
-                {
-                    case > 0.2f:
-                        platformerPlayerController.Animator.Play("Jump");
-                        break;
-                    case < -0.2f:
-                        platformerPlayerController.Animator.Play("Fall");
-                        break;
-                }
-            }
+            // if (movementAxis != Vector2.zero)
+            // {
+            // 
+            // if (platformerMovementData.IsGrounded)
+            // {
+            //     if (platformerPlayerController.PlatformerInputActions.Player.Move.inProgress && movementAxis != Vector2.zero)
+            //     {
+            //         platformerPlayerController.Animator.speed = Mathf.Abs(movementAxis.x);
+            //         if (platformerPlayerController.PlatformerInputActions.Player.Sprint.inProgress)
+            //         {
+            //             platformerPlayerController.Animator.speed *= 1.5f;
+            //         }
+            //
+            //
+            //         platformerPlayerController.Animator.Play("Run");
+            //     }
+            //     else
+            //     {
+            //         platformerPlayerController.Animator.Play("Idle");
+            //     }
+            // }
+            // else
+            // {
+            //     switch (platformerPlayerController.Rigidbody2D.linearVelocityY)
+            //     {
+            //         case > 0.2f:
+            //             platformerPlayerController.Animator.Play("Jump");
+            //             break;
+            //         case < -0.2f:
+            //             platformerPlayerController.Animator.Play("Fall");
+            //             break;
+            //     }
+            // }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (PlayerController is PlatformerPlayerController platformerPlayerController)
-            {
-                platformerPlayerController.SpriteRenderer.transform.DOShakeScale(0.1f, Mathf.Clamp(other.relativeVelocity.y * 0.1f, 0.2f, 5), 24).SetRelative()
-                    .SetEase(Ease.InOutBounce)
-                    .OnComplete(() => platformerPlayerController.SpriteRenderer.transform.localScale = _visualsOriginalScale);
-            }
+            // if (PlayerController is PlatformerPlayerController platformerPlayerController)
+            // {
+            //     platformerPlayerController.SpriteRenderer.transform.DOShakeScale(0.1f, Mathf.Clamp(other.relativeVelocity.y * 0.1f, 0.2f, 5), 24).SetRelative()
+            //         .SetEase(Ease.InOutBounce)
+            //         .OnComplete(() => platformerPlayerController.SpriteRenderer.transform.localScale = _visualsOriginalScale);
+            // }
         }
 
         private void HandleSpringAnimation(InputAction.CallbackContext obj)
@@ -121,7 +130,7 @@ namespace Payosky.Platformer
 
             try
             {
-                await platformerPlayerController.SpriteRenderer.transform.DOScale(
+                await platformerPlayerController.Renderer.transform.DOScale(
                         new Vector3(_visualsOriginalScale.x * 1.4f, _visualsOriginalScale.y * 0.6f, 1),
                         platformerPlayerController.MovementController.JumpSubsystem.MaxJumpHoldTime)
                     .WithCancellation(_springTokenSource.Token);
@@ -131,23 +140,7 @@ namespace Payosky.Platformer
             }
             finally
             {
-                platformerPlayerController.SpriteRenderer.transform.localScale = _visualsOriginalScale;
-            }
-        }
-
-        public void Init(IPlayerController controller)
-        {
-            PlayerController = controller;
-            PlayerController.RendererController = this;
-
-            PlayerController.OnRespawn += OnRespawn;
-            PlayerController.OnDespawn += OnDespawn;
-
-            if (PlayerController is PlatformerPlayerController platformerPlayerController)
-            {
-                _visualsOriginalScale = platformerPlayerController.SpriteRenderer.transform.localScale;
-                platformerPlayerController.PlatformerInputActions.Player.Jump.performed += HandleSpringAnimation;
-                platformerPlayerController.PlatformerInputActions.Player.Jump.canceled += CancelSpringAnimation;
+                platformerPlayerController.Renderer.transform.localScale = _visualsOriginalScale;
             }
         }
 
@@ -158,8 +151,8 @@ namespace Payosky.Platformer
 
             if (PlayerController is PlatformerPlayerController platformerPlayerController)
             {
-                platformerPlayerController.PlatformerInputActions.Player.Jump.performed -= HandleSpringAnimation;
-                platformerPlayerController.PlatformerInputActions.Player.Jump.canceled -= CancelSpringAnimation;
+                // platformerPlayerController.PlatformerInputActions.Player.Jump.performed -= HandleSpringAnimation;
+                // platformerPlayerController.PlatformerInputActions.Player.Jump.canceled -= CancelSpringAnimation;
             }
         }
 
@@ -167,7 +160,7 @@ namespace Payosky.Platformer
         {
             if (PlayerController is PlatformerPlayerController platformerPlayerController)
             {
-                platformerPlayerController.SpriteRenderer.enabled = true;
+                platformerPlayerController.Renderer.enabled = true;
             }
         }
 
@@ -175,7 +168,7 @@ namespace Payosky.Platformer
         {
             if (PlayerController is PlatformerPlayerController platformerPlayerController)
             {
-                platformerPlayerController.SpriteRenderer.enabled = false;
+                platformerPlayerController.Renderer.enabled = false;
             }
         }
     }
